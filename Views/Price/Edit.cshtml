@@ -1,0 +1,179 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.EditPriceRequest
+
+<div>
+    <div class="container">
+        <h1 class="styled-heading">Add Price</h1>
+    </div>
+</div>
+>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label">Price Code</label>
+                <input type="text" class="form-control short-input" id="priceCode" asp-for="PriceCode" />
+                <span asp-validation-for="PriceCode" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">From date</label>
+                <input type="date" class="form-control short-input" id="fromdDate" asp-for="FromDate" />
+                <span asp-validation-for="FromDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label">To date</label>
+                <input type="date" class="form-control short-input" id="toDate" asp-for="ToDate" />
+                <span asp-validation-for="ToDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">SysU</label>
+                <input type="text" class="form-control short-input" id="sysU" asp-for="SysU" />
+                <span asp-validation-for="SysU" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="PriceID" />
+        </div>
+
+
+        <div class="container">
+            <h1 class="styled-heading">Price Details</h1>
+        </div>
+
+
+        <div class="form-group">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>VAT</th>
+                        <th>EnvirontmentTax</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="priceDetailRows">
+                    @for (int i = 0; i < Model.PriceDetails.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <select asp-for="PriceDetails[i].ProductID" class="form-control" asp-items="Model.Products">
+                                    <option value="">Select Product</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="hidden" asp-for="PriceDetails[i].PriceDetailID" />
+                                <input type="hidden" asp-for="PriceDetails[i].PriceID" />
+                                <input type="hidden" asp-for="PriceDetails[i].UnitID" />
+                                <input type="number" asp-for="PriceDetails[i].VAT" class="form-control" />
+                            </td>
+                            <td>
+                                <input type="number" asp-for="PriceDetails[i].EnvirontmentTax" class="form-control" />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" onclick="addPriceDetailRow()">Add Price Detail</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-dark">Update</button>
+                    <button type="submit" class="btn btn-danger ms-2" asp-action="Delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Function to add a new row for Price Details
+        function addPriceDetailRow() {
+            var rowCount = document.getElementById('priceDetailRows').rows.length;
+            var productData = JSON.parse(document.getElementById('productData').textContent);
+            var productOptions = productData.map(p => `<option value="${p.Value}">${p.Text}</option>`).join('');
+            var newRow = `
+                                                <tr>
+                                                    <td>
+                                                        <select name="PriceDetails[` + rowCount + `].ProductID" class="form-control">
+                                                        <option value="">Select Product</option>
+                                                         ${productOptions}
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="hidden" name="PriceDetails[` + rowCount + `].PriceDetailID" />
+                                                        <input type="hidden" name="PriceDetails[` + rowCount + `].ProductID" />
+                                                        <input type="hidden" name="PriceDetails[` + rowCount + `].PriceID" />
+                                                        <input type="hidden" name="PriceDetails[` + rowCount + `].UnitID" />
+                                                        <input type="number" name="PriceDetails[` + rowCount + `].VAT" class="form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="PriceDetails[` + rowCount + `].EnvirontmentTax" class="form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
+                                                    </td>
+                                                </tr>`;
+            document.getElementById('priceDetailRows').insertAdjacentHTML('beforeend', newRow);
+        }
+
+        // Function to remove a row
+        function removeRow(button) {
+            var row = button.closest("tr");
+            row.remove();
+
+            // Update remaining rows
+            var rows = document.querySelectorAll("#priceDetailRows tr");
+            rows.forEach((row, index) => {
+                row.querySelectorAll("input").forEach(input => {
+                    var name = input.getAttribute("name");
+                    if (name) {
+                        var newName = name.replace(/\[\d+\]/, "[" + index + "]");
+                        input.setAttribute("name", newName);
+                    }
+
+                    var id = input.getAttribute("id");
+                    if (id) {
+                        var newId = id.replace(/_\d+_/, "_" + index + "_");
+                        input.setAttribute("id", newId);
+                    }
+                });
+            });
+        }
+    </script>
+    <script type="application/json" id="productData">
+        @Html.Raw(Json.Serialize(Model.Products))
+    </script>
+}
+
+<style>
+    .short-input {
+        max-width: 250px;
+    }
+
+    .styled-heading {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: black;
+        background: linear-gradient(to right, #6a11cb, black);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 10px 0;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+@await Html.PartialAsync("_ValidationScriptsPartial")

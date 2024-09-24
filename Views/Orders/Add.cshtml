@@ -1,0 +1,78 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddOrderRequest
+@{
+}
+
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>
+            Add new Order
+        </h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <label class="form-label">Order Date</label>
+            <input type="date" class="form-control" id="orderDate" asp-for="OrderDate" />
+            <span class="text-danger" asp-validation-for="OrderDate"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Required Date</label>
+            <input type="date" class="form-control" id="requiredDate" asp-for="RequiredDate" />
+            <span class="text-danger" asp-validation-for="RequiredDate"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Shipped Date</label>
+            <input type="date" class="form-control" id="shippedDate" asp-for="ShippedDate" />
+            <span class="text-danger" asp-validation-for="ShippedDate"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Order Status</label>
+            <input type="text" class="form-control" id="orderStatus" asp-for="OrderStatus" />
+            <span class="text-danger" asp-validation-for="OrderStatus"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Comment</label>
+            <input type="text" class="form-control" id="commnent" asp-for="Comment" />
+            <span class="text-danger" asp-validation-for="Comment"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Customer Name</label>
+            <select class="form-select" asp-items="@Model.Customers" asp-for="CustomerID">
+            </select>
+            <span class="text-danger" asp-validation-for="CustomerID"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">EmployeeID</label>
+            <select type="text" class="form-control" asp-items="@Model.Employees" asp-for="EmployeeID">
+            </select>
+            <span class="text-danger" asp-validation-for="EmployeeID"></span>
+        </div>
+        <div class="mb-3" hidden>
+            <label class="form-label">SysU</label>
+            <input type="text" class="form-control" id="sysU" asp-for="SysU" />
+        </div>
+        <div class="mb-3" hidden>
+            <label class="form-label">SysD</label>
+            <input type="number" class="form-control" id="sysD" asp-for="SysD" />
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+

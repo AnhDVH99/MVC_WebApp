@@ -1,0 +1,66 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddEmployeeRequest
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Add new employee</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <input type="text" class="form-control" id="employeeID" asp-for="EmployeeID" hidden />
+
+        <!-- Validation Summary -->
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- Row 1: First Name and Last Name -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" id="emFirstName" asp-for="FirstName" />
+                <span class="text-danger" asp-validation-for="FirstName"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="emLastName" asp-for="LastName" />
+                <span class="text-danger" asp-validation-for="LastName"></span>
+            </div>
+        </div>
+
+        <!-- Row 2: Email and Phone -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" asp-for="Email" />
+                <span class="text-danger" asp-validation-for="Email"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input type="text" class="form-control" id="phone" asp-for="Phone" />
+                <span class="text-danger" asp-validation-for="Phone"></span>
+            </div>
+        </div>
+
+        <!-- Row 3: Job Title -->
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label class="form-label">Job title</label>
+                <input type="text" class="form-control" id="jobtitle" asp-for="JobTitle" />
+                <span class="text-danger" asp-validation-for="JobTitle"></span>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

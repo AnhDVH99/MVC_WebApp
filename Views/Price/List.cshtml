@@ -1,0 +1,46 @@
+﻿@model List<ASP.NET_Core_MVC_Piacom.Models.Domain.Price>
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>
+            Price List
+        </h1>
+    </div>
+</div>
+
+<a asp-area="" asp-controller="Price" asp-action="Add">Add Price</a>
+
+<div class="container py-5">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Price Code</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var price in Model)
+                {
+                    <tr>
+                        <td>@price.PriceCode</td>
+                        <td>@price.FromDate</td>
+                        <td>@price.ToDate</td>
+                        <td>
+                            <a asp-area="" asp-controller="Price" asp-action="Edit" asp-route-id="@price.PriceID">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No Price found!</p>
+    }
+</div>

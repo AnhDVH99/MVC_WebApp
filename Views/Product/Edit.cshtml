@@ -1,0 +1,66 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.EditProductRequest
+
+<div>
+    <div class="container">
+        <h1 class="styled-heading">Add Product</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label">Product Name</label>
+                <input type="text" class="form-control short-input" id="priceCode" asp-for="ProductName" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Product Code</label>
+                <input type="text" class="form-control short-input" id="fromdDate" asp-for="ProductCode" />
+                <span asp-validation-for="ProductCode" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label">Product Description</label>
+                <input type="text" class="form-control short-input" id="toDate" asp-for="ProductDescription" />
+                <span asp-validation-for="ProductDescription" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Product Status</label>
+                <input type="text" class="form-control short-input" id="sysU" asp-for="ProductStatus" />
+                <span asp-validation-for="ProductStatus" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="SysU" />
+
+            <input type="hidden" asp-for="ProductID" />
+        </div>
+
+    </form>
+</div>
+
+
+<style>
+    .short-input {
+        max-width: 250px;
+    }
+
+
+    .styled-heading {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: black;
+        background: linear-gradient(to right, #6a11cb, black);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 10px 0;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+@await Html.PartialAsync("_ValidationScriptsPartial")

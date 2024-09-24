@@ -1,0 +1,109 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddCustomerRequest
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Add customer</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (Model != null)
+    {
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Customer Name</label>
+                    <input type="text" class="form-control short-input" id="cusName" asp-for="CustomerName" />
+                    <span asp-validation-for="CustomerName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text" class="form-control short-input" id="phone" asp-for="Phone" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">AddressLine1</label>
+                    <input type="text" class="form-control short-input" id="address1" asp-for="Address1" />
+                    <span asp-validation-for="Address1" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">AddressLine2</label>
+                    <input type="text" class="form-control short-input" id="address2" asp-for="Address2" />
+                    <span asp-validation-for="Address2" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">City</label>
+                    <input type="text" class="form-control short-input" id="city" asp-for="City" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">State</label>
+                    <input type="text" class="form-control short-input" id="state" asp-for="State" />
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">PostalCode</label>
+                    <input type="text" class="form-control short-input" id="postalCode" asp-for="PostalCode" />
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Country</label>
+                    <input type="text" class="form-control short-input" id="country" asp-for="Country" />
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">SaleRepEmployeeID</label>
+                    <select type="text" class="form-control short-input" asp-items="@Model.Employees" asp-for="SaleRepEmployeeID">
+
+                    </select>
+                    <span asp-validation-for="SaleRepEmployeeID" class="text-danger"></span>
+                </div>
+
+                @* <div class="col-md-3"> *@
+                @*     <label class="form-label">CreditLimitID</label> *@
+                <input type="number" class="form-control short-input" id="creditLimitID" asp-for="CreditLimitID" hidden/>
+                @* *@
+                @*     </select> *@
+                @*      *@
+                @* </div> *@
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+    else
+    {
+        <p>Customer not found!</p>
+    }
+</div>
+
+<style>
+    .short-input {
+        max-width: 250px; /* Adjust the width as needed */
+    }
+</style>
+
+@await Html.PartialAsync("_ValidationScriptsPartial")

@@ -1,0 +1,50 @@
+﻿@model List<ASP.NET_Core_MVC_Piacom.Models.Domain.Employee>
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>
+            Employee List
+        </h1>
+    </div>
+</div>
+
+<a asp-area="" asp-controller="Employees" asp-action="Add">Add Employee</a>
+
+<div class="container py-5">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Job Title</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>@employee.FirstName</td>
+                        <td>@employee.LastName</td>
+                        <td>@employee.Email</td>
+                        <td>@employee.Phone</td>
+                        <td>@employee.JobTitle</td>
+                        <td>
+                            <a asp-area="" asp-controller="Employees" asp-action="Edit" asp-route-id="@employee.EmployeeID">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No employee found!</p>
+    }
+</div>

@@ -1,0 +1,46 @@
+﻿@model List<ASP.NET_Core_MVC_Piacom.Models.Domain.Customer>
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>
+            Customer List
+        </h1>
+    </div>
+</div>
+
+<a asp-area="" asp-controller="Customer" asp-action="Add">Add Customer</a>
+
+<div class="container py-5">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in Model)
+                {
+                    <tr>
+                        <td>@customer.CustomerName</td>
+                        <td>@customer.Phone</td>
+                        <td>@customer.City</td>
+                        <td>
+                            <a asp-area="" asp-controller="Customer" asp-action="Edit" asp-route-id="@customer.CustomerID">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No customer found!</p>
+    }
+</div>

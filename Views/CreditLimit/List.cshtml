@@ -1,0 +1,70 @@
+﻿@model List<ASP.NET_Core_MVC_Piacom.Models.Domain.CreditLimit>
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>
+            Credit limit List
+        </h1>
+    </div>
+</div>
+
+<a asp-area="" asp-controller="CreditLimit" asp-action="Add">Add Credit Limit</a>
+
+@{
+    if(TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    if(TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+}
+
+<div class="container py-5">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>From date</th>
+                    <th>To date</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var credit in Model)
+                {
+                    <tr>
+                        <td>@credit.Customer.CustomerName</td>
+                        <td>@credit.FromDate</td>
+                        <td>@credit.ToDate</td>
+                        <td>@credit.Total</td>
+                        <td>
+                            <a asp-area="" asp-controller="CreditLimit" asp-action="Edit" asp-route-id="@credit.CreditLimitID">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No Credit limit found!</p>
+    }
+</div>
+
+
+
+<!-- Custom inline CSS -->
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

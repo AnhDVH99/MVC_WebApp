@@ -1,0 +1,55 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddPriceRequest
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Add Price</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Price Code</label>
+                    <input type="text" class="form-control short-input" id="cusName" asp-for="PriceCode" />
+                    <span asp-validation-for="PriceCode" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">From date</label>
+                    <input type="date" class="form-control short-input" id="phone" asp-for="FromDate" />
+                    <span asp-validation-for="FromDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">To date</label>
+                    <input type="date" class="form-control short-input" id="address1" asp-for="ToDate" />
+                    <span asp-validation-for="ToDate" class="text-danger"></span>
+                </div>
+            <div class="col-md-3">
+                <label class="form-label">SysU</label>
+                <input type="text" class="form-control short-input" id="sysU" asp-for="SysU" />
+                <span asp-validation-for="SysU" class="text-danger"></span>
+            </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+</div>
+
+<style>
+    .short-input {
+        max-width: 250px; /* Adjust the width as needed */
+    }
+</style>
+
+@await Html.PartialAsync("_ValidationScriptsPartial")
