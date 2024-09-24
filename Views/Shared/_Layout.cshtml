@@ -1,9 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ASP.NET_Core_MVC_Piacom</title> 
+    <title>@ViewData["Title"] - ASP.NET_Core_MVC_Piacom</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ASP.NET_Core_MVC_Piacom.styles.css" asp-append-version="true" />
@@ -18,46 +21,83 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuEmployees" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Master Data
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuEmployees">
-                                <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">Customers</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Orders" asp-action="List">Orders</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Units" asp-action="Index">Units</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="List">Products</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Price" asp-action="List">Prices</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="List">Employees</a>
-                                <!-- Add more dropdown items as needed -->
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuEmployees" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Customer
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuEmployees">
-                                <a class="dropdown-item" asp-area="" asp-controller="Payments" asp-action="Index">Payments</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="CreditLimit" asp-action="List">Credit Limits</a>
-                                <!-- Add more dropdown items as needed -->
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Price" asp-action="List">Price</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="PriceDetails" asp-action="Index">Price Details</a>
-                        </li>
-                    </ul>
+
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuEmployees" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Master Data
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuEmployees">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">Customers</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Orders" asp-action="List">Orders</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Units" asp-action="Index">Units</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="List">Products</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Price" asp-action="List">Prices</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="List">Employees</a>
+                                    <!-- Add more dropdown items as needed -->
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuEmployees" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Customer
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuEmployees">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Payments" asp-action="Index">Payments</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="CreditLimit" asp-action="List">Credit Limits</a>
+                                    <!-- Add more dropdown items as needed -->
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Price" asp-action="List">Price</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="PriceDetails" asp-action="Index">Price Details</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+
+
+                <div class="d-flex align-items-center">
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <div class="me-3 text-light">
+                            @User?.Identity?.Name
+                        </div>
+                        <a class=" btn me-3 bg-light text-dark"
+                           asp-area=""
+                           asp-controller="Account"
+                           asp-action="Logout">
+                            Logout
+                        </a>
+                    }
+                    else
+                    {
+
+                        <a class=" btn me-3 bg-light text-dark"
+                           asp-area=""
+                           asp-controller="Account"
+                           asp-action="Login">
+                            Login
+                        </a>
+                        <a class=" btn me-3 bg-light text-dark"
+                           asp-area=""
+                           asp-controller="Account"
+                           asp-action="Register">
+                            Register
+                        </a>
+                    }
+
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-             @RenderBody()
+            @RenderBody()
         </main>
     </div>
 

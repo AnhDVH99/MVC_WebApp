@@ -2,12 +2,14 @@ using ASP.NET_Core_MVC_Piacom.Data;
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using ASP.NET_Core_MVC_Piacom.Models.ViewModels;
 using ASP.NET_Core_MVC_Piacom.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers;
+[Authorize(Roles = "Admin")]
 
 public class CustomerController : Controller
 {
@@ -42,6 +44,22 @@ public class CustomerController : Controller
     [ActionName("Add")]
     public async Task<IActionResult> Add(AddCustomerRequest addCustomerRequest)
     {
+
+        if (!ModelState.IsValid)
+        {
+            var employees = await employeeRepository.GetAllAsync();
+            addCustomerRequest.Employees = employees.Select(e => new SelectListItem
+            {
+                Text = e.FirstName,
+                Value = e.EmployeeID.ToString()
+            });
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                               .Select(e => e.ErrorMessage)
+                               .ToList();
+
+            // Optionally log the errors or inspect them in your debugger
+            return View(addCustomerRequest);
+        }
         var customer = new Customer
         {
             CustomerName = addCustomerRequest.CustomerName,

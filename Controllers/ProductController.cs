@@ -1,19 +1,25 @@
 ﻿using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using ASP.NET_Core_MVC_Piacom.Models.ViewModels;
 using ASP.NET_Core_MVC_Piacom.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class ProductController : Controller
     {
         private readonly IProductRepository productRepository;
         private readonly IPriceDetailRepository priceDetailRepository;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public ProductController(IProductRepository productRepository, IPriceDetailRepository priceDetailRepository)
+        public ProductController(IProductRepository productRepository, IPriceDetailRepository priceDetailRepository, UserManager<IdentityUser> userManager )
         {
             this.productRepository = productRepository;
             this.priceDetailRepository = priceDetailRepository;
+            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -26,6 +32,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddProductRequest addProductRequest)
         {
+            var currentUser = await userManager.GetUserAsync(User);
             var priceDetails = await priceDetailRepository.GetAllAsync();
             var product = new Product
             {
@@ -35,7 +42,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 ProductName = addProductRequest.ProductName,
                 ProductStatus = addProductRequest.ProductStatus,
                 PriceDetails = addProductRequest.PriceDetails,
-                SysU = addProductRequest.SysU,
+                SysU = currentUser?.UserName,
                 SysD = DateTime.Now
             };
             await productRepository.AddAsync(product);
@@ -55,6 +62,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
 
+            var currentUser = await userManager.GetUserAsync(User);
             var product = await productRepository.GetAsync(id);
 
             if (product == null)
@@ -79,7 +87,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditProductRequest editProductRequest)
         {
-
+            var currentUser = await userManager.GetUserAsync(User);
             var priceDetails = await priceDetailRepository.GetAllAsync();
             var product = new Product
             {
@@ -88,7 +96,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 ProductDescription = editProductRequest.ProductDescription,
                 ProductName = editProductRequest.ProductName,
                 ProductStatus = editProductRequest.ProductStatus,
-                SysU = editProductRequest.SysU,
+                SysU = currentUser?.UserName,
                 SysD = DateTime.Now,
                 PriceDetails = editProductRequest.PriceDetails != null
                        ? editProductRequest.PriceDetails.ToList()

@@ -34,9 +34,16 @@
                 <input type="text" class="form-control short-input" id="sysU" asp-for="ProductStatus" />
                 <span asp-validation-for="ProductStatus" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="SysU" />
 
             <input type="hidden" asp-for="ProductID" />
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-dark">Update</button>
+                    <button type="submit" class="btn btn-danger ms-2" asp-area="" asp-controller="Product" asp-action="Delete">Delete</button>
+                </div>
+            </div>
         </div>
 
     </form>

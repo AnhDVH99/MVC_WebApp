@@ -9,9 +9,12 @@ using ASP.NET_Core_MVC_Piacom.Data;
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using ASP.NET_Core_MVC_Piacom.Repositories;
 using ASP.NET_Core_MVC_Piacom.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class OrdersController : Controller
     {
         private readonly IOrderRepository orderRepository;

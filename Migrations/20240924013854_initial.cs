@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -280,16 +280,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_PriceDetailID",
-                table: "OrderDetails",
-                column: "PriceDetailID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_ProductID",
-                table: "OrderDetails",
-                column: "ProductID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_UnitID",
                 table: "OrderDetails",
                 column: "UnitID");
@@ -329,43 +319,11 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 table: "Users",
                 column: "EmployeeID",
                 unique: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_OrderDetails_PriceDetails_PriceDetailID",
-                table: "OrderDetails",
-                column: "PriceDetailID",
-                principalTable: "PriceDetails",
-                principalColumn: "PriceDetailID",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_OrderDetails_Products_ProductID",
-                table: "OrderDetails",
-                column: "ProductID",
-                principalTable: "Products",
-                principalColumn: "ProductID",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Orders_Customers_CustomerID",
-                table: "Orders");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_OrderDetails_Orders_OrderID",
-                table: "OrderDetails");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_OrderDetails_PriceDetails_PriceDetailID",
-                table: "OrderDetails");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_OrderDetails_Products_ProductID",
-                table: "OrderDetails");
-
             migrationBuilder.DropTable(
                 name: "CreditLimits");
 
@@ -373,19 +331,10 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Customers");
-
-            migrationBuilder.DropTable(
-                name: "Employees");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
-
-            migrationBuilder.DropTable(
                 name: "PriceDetails");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Prices");
@@ -397,7 +346,16 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 name: "OrderDetails");
 
             migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "Units");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
         }
     }
 }

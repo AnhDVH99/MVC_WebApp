@@ -1,11 +1,14 @@
 ﻿using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using ASP.NET_Core_MVC_Piacom.Models.ViewModels;
 using ASP.NET_Core_MVC_Piacom.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class PriceController : Controller
     {
         private readonly IPriceRepository priceRepository;

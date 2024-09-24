@@ -1,9 +1,11 @@
 using ASP.NET_Core_MVC_Piacom.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

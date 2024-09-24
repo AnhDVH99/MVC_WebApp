@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    [Migration("20240922031837_Initial")]
-    partial class Initial
+    [Migration("20240924013854_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -219,10 +219,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                     b.HasKey("OrderDetailID");
 
                     b.HasIndex("OrderID");
-
-                    b.HasIndex("PriceDetailID");
-
-                    b.HasIndex("ProductID");
 
                     b.HasIndex("UnitID");
 
@@ -442,18 +438,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.PriceDetail", "PriceDetail")
-                        .WithMany()
-                        .HasForeignKey("PriceDetailID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitID")
@@ -461,10 +445,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
-
-                    b.Navigation("PriceDetail");
-
-                    b.Navigation("Product");
 
                     b.Navigation("Unit");
                 });

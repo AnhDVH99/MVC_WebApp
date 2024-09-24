@@ -2,7 +2,42 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <!-- Feature Highlights Section -->
+    <div class="row text-center py-5">
+        <div class="col-md-4">
+            <img src="https://procurify.com/app/uploads/2018/03/ordermanagement.png" alt="Order Management" class="mb-3 feature-image">
+            <h3>Order Management</h3>
+            <p>Easily create, update, and track your orders with a user-friendly interface.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://cdn.prod.website-files.com/666bbba4ff7240a20f4cccf8/666bbba4ff7240a20f4ce41d_Real-time-data-analytics.png" alt="Real-Time Analytics" class="mb-3 feature-image">
+            <h3>Real-Time Analytics</h3>
+            <p>Monitor your order statistics with comprehensive reports and data visualization.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://img.freepik.com/premium-vector/worker-warehouse-checking-inventory-concept-inventory-control-system_530733-2936.jpg?semt=ais_hybrid" alt="Inventory Control" class="mb-3 feature-image">
+            <h3>Inventory Control</h3>
+            <p>Manage stock levels and ensure timely deliveries with automated inventory updates.</p>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center py-5">
+        <h2 class="mb-4">Get Started with Order Manager Today</h2>
+        <a class="btn btn-success btn-lg" href="/Order/Create" role="button">Create Your First Order</a>
+    </div>
 </div>
+
+<!-- Optional: Add Bootstrap and FontAwesome for icons -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<style>
+    /* Set a fixed size for feature images */
+    .feature-image {
+        width: 300px; /* Fixed width */
+        height: 300px; /* Fixed height */
+        object-fit: fill; /* Ensures image covers the area without distortion */
+    }
+</style>

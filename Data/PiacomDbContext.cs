@@ -5,7 +5,7 @@ namespace ASP.NET_Core_MVC_Piacom.Data;
 
 public class PiacomDbContext : DbContext
 {
-    public PiacomDbContext(DbContextOptions options) : base(options)
+    public PiacomDbContext(DbContextOptions<PiacomDbContext> options) : base(options)
     {
 
     }
@@ -25,6 +25,6 @@ public class PiacomDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
+
     }
 }
