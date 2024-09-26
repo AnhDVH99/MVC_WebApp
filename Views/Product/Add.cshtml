@@ -1,55 +1,58 @@
 ﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddProductRequest
 
-<div class="bg-secondary bg-opacity-10 py-2">
-    <div class="container">
-        <h1>Add Price</h1>
-    </div>
-</div>
+
+<h1 class="mb-4 text-center">Add Product</h1>
+
 
 <div class="container py-5">
-    <form method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="row mb-3">
-            <div class="col-md-3">
-                <label class="form-label">Product Code</label>
-                <input type="text" class="form-control short-input" id="ProductCode" asp-for="ProductCode" />
-                <span asp-validation-for="ProductCode" class="text-danger"></span>
-            </div>
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Product Information</h4>
+                    <hr />
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-            <div class="col-md-3">
-                <label class="form-label">Product Name</label>
-                <input type="text" class="form-control short-input" id="ProductName" asp-for="ProductName" />
-                <span asp-validation-for="ProductName" class="text-danger"></span>
-            </div>
-        </div>
+                        <div class="mb-3">
+                            <label asp-for="ProductCode" class="form-label"></label>
+                            <input asp-for="ProductCode" class="form-control" placeholder="Enter product code" />
+                            <span asp-validation-for="ProductCode" class="text-danger"></span>
+                        </div>
 
-        <div class="row mb-3">
-            <div class="col-md-3">
-                <label class="form-label">Product Description</label>
-                <input type="text" class="form-control short-input" id="ProductDescription" asp-for="ProductDescription" />
-                <span asp-validation-for="ProductDescription" class="text-danger"></span>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Product Status</label>
-                <input type="text" class="form-control short-input" id="ProductStatus" asp-for="ProductStatus" />
-                <span asp-validation-for="ProductStatus" class="text-danger"></span>
-            </div>
+                        <div class="mb-3">
+                            <label asp-for="ProductName" class="form-label"></label>
+                            <input asp-for="ProductName" class="form-control" placeholder="Enter product name" />
+                            <span asp-validation-for="ProductName" class="text-danger"></span>
+                        </div>
 
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="d-flex">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                        <div class="mb-3">
+                            <label asp-for="ProductDescription" class="form-label"></label>
+                            <textarea asp-for="ProductDescription" class="form-control" placeholder="Enter product description"></textarea>
+                            <span asp-validation-for="ProductDescription" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProductStatus" class="form-label"></label>
+                            <input asp-for="ProductStatus" class="form-control" placeholder="Enter product status" />
+                            <span asp-validation-for="ProductStatus" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Create
+                            </button>
+                            <a asp-action="List" asp-controller="Product" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left-circle"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 
-<style>
-    .short-input {
-        max-width: 250px; /* Adjust the width as needed */
-    }
-</style>
-
-@await Html.PartialAsync("_ValidationScriptsPartial")
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

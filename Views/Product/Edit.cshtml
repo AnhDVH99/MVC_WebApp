@@ -1,73 +1,76 @@
 ﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.EditProductRequest
 
-<div>
-    <div class="container">
-        <h1 class="styled-heading">Add Product</h1>
+
+        <h1 class="mb-4 text-center">Edit Product</h1>
+
+
+<div class="container py-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="ProductID" />
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="ProductName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" asp-for="ProductName" />
+                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ProductCode" class="form-label">Product Code</label>
+                        <input type="text" class="form-control" asp-for="ProductCode" />
+                        <span asp-validation-for="ProductCode" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="ProductDescription" class="form-label">Product Description</label>
+                        <input type="text" class="form-control" asp-for="ProductDescription" />
+                        <span asp-validation-for="ProductDescription" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ProductStatus" class="form-label">Product Status</label>
+                        <input type="text" class="form-control" asp-for="ProductStatus" />
+                        <span asp-validation-for="ProductStatus" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-primary me-2">Update</button>
+                            <button type="button" class="btn btn-danger" onclick="confirmDeletion()">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Confirmation Message -->
+            <div id="deleteConfirmation" style="display:none;" class="alert alert-warning mt-3">
+                <strong>Are you sure you want to delete this product?</strong>
+                <form asp-action="Delete" method="post" class="mt-2">
+                    <input type="hidden" asp-for="ProductID" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelDeletion()">Cancel</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="container py-5">
-    <form method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="row mb-3">
-            <div class="col-md-3">
-                <label class="form-label">Product Name</label>
-                <input type="text" class="form-control short-input" id="priceCode" asp-for="ProductName" />
-                <span asp-validation-for="ProductName" class="text-danger"></span>
-            </div>
+@section Scripts {
+    <script>
+        function confirmDeletion() {
+            document.getElementById('deleteConfirmation').style.display = 'block';
+        }
 
-            <div class="col-md-3">
-                <label class="form-label">Product Code</label>
-                <input type="text" class="form-control short-input" id="fromdDate" asp-for="ProductCode" />
-                <span asp-validation-for="ProductCode" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3">
-                <label class="form-label">Product Description</label>
-                <input type="text" class="form-control short-input" id="toDate" asp-for="ProductDescription" />
-                <span asp-validation-for="ProductDescription" class="text-danger"></span>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Product Status</label>
-                <input type="text" class="form-control short-input" id="sysU" asp-for="ProductStatus" />
-                <span asp-validation-for="ProductStatus" class="text-danger"></span>
-            </div>
-
-            <input type="hidden" asp-for="ProductID" />
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="d-flex">
-                    <button type="submit" class="btn btn-dark">Update</button>
-                    <button type="submit" class="btn btn-danger ms-2" asp-area="" asp-controller="Product" asp-action="Delete">Delete</button>
-                </div>
-            </div>
-        </div>
-
-    </form>
-</div>
-
-
-<style>
-    .short-input {
-        max-width: 250px;
-    }
-
-
-    .styled-heading {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: black;
-        background: linear-gradient(to right, #6a11cb, black);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        padding: 10px 0;
-        text-align: center;
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-</style>
-
-@await Html.PartialAsync("_ValidationScriptsPartial")
+        function cancelDeletion() {
+            document.getElementById('deleteConfirmation').style.display = 'none';
+        }
+    </script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
