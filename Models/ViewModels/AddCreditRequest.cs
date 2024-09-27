@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
 {
     public class AddCreditRequest
     {
-        [Required]
+
         public Guid CreditLimitID { get; set; }
 
         [Required]
@@ -26,7 +27,7 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
 
         public string? OverDue { get; set; }
 
-        public Customer Customer { get; set; }
+        public Customer? Customer { get; set; }
 
         public IEnumerable<SelectListItem> Customers { get; set; }
     }

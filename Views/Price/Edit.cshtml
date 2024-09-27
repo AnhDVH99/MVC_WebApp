@@ -5,8 +5,7 @@
         <h1 class="styled-heading">Add Price</h1>
     </div>
 </div>
->
-</div>
+
 
 <div class="container py-5">
     <form method="post">
@@ -31,11 +30,7 @@
                 <input type="date" class="form-control short-input" id="toDate" asp-for="ToDate" />
                 <span asp-validation-for="ToDate" class="text-danger"></span>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">SysU</label>
-                <input type="text" class="form-control short-input" id="sysU" asp-for="SysU" />
-                <span asp-validation-for="SysU" class="text-danger"></span>
-            </div>
+            <input type="hidden" class="form-control short-input" id="sysU" asp-for="SysU" />
             <input type="hidden" asp-for="PriceID" />
         </div>
 
@@ -61,13 +56,11 @@
                         <tr>
                             <td>
                                 <select asp-for="PriceDetails[i].ProductID" class="form-control" asp-items="Model.Products">
-                                    <option value="">Select Product</option>
+                                    
                                 </select>
                             </td>
                             <td>
-                                <input type="hidden" asp-for="PriceDetails[i].PriceDetailID" />
-                                <input type="hidden" asp-for="PriceDetails[i].PriceID" />
-                                <input type="hidden" asp-for="PriceDetails[i].UnitID" />
+
                                 <input type="number" asp-for="PriceDetails[i].VAT" class="form-control" />
                             </td>
                             <td>
@@ -97,54 +90,56 @@
 </div>
 
 @section Scripts {
+    <script type="application/json" id="productData">
+        @Html.Raw(Json.Serialize(Model.Products))
+    </script>
     <script>
         // Function to add a new row for Price Details
         function addPriceDetailRow() {
             var rowCount = document.getElementById('priceDetailRows').rows.length;
             var productData = JSON.parse(document.getElementById('productData').textContent);
             var productOptions = productData.map(p => `<option value="${p.Value}">${p.Text}</option>`).join('');
-            var newRow = `
-                                                <tr>
-                                                    <td>
-                                                        <select name="PriceDetails[` + rowCount + `].ProductID" class="form-control">
-                                                        <option value="">Select Product</option>
-                                                         ${productOptions}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input type="hidden" name="PriceDetails[` + rowCount + `].PriceDetailID" />
-                                                        <input type="hidden" name="PriceDetails[` + rowCount + `].ProductID" />
-                                                        <input type="hidden" name="PriceDetails[` + rowCount + `].PriceID" />
-                                                        <input type="hidden" name="PriceDetails[` + rowCount + `].UnitID" />
-                                                        <input type="number" name="PriceDetails[` + rowCount + `].VAT" class="form-control" />
-                                                    </td>
-                                                    <td>
-                                                        <input type="number" name="PriceDetails[` + rowCount + `].EnvirontmentTax" class="form-control" />
-                                                    </td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
-                                                    </td>
-                                                </tr>`;
-            document.getElementById('priceDetailRows').insertAdjacentHTML('beforeend', newRow);
+
+            var newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>
+                    <select name="PriceDetails[${rowCount}].ProductID" class="form-control">
+                        ${productOptions}
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="PriceDetails[${rowCount}].VAT" class="form-control" />
+                </td>
+                <td>
+                    <input type="number" name="PriceDetails[${rowCount}].EnvirontmentTax" class="form-control" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
+                </td>
+            `;
+
+            document.getElementById('priceDetailRows').appendChild(newRow);
         }
 
         // Function to remove a row
         function removeRow(button) {
             var row = button.closest("tr");
-            row.remove();
+            row.remove(); // Remove the row from the DOM
 
-            // Update remaining rows
+            // Update the names of all remaining rows
             var rows = document.querySelectorAll("#priceDetailRows tr");
             rows.forEach((row, index) => {
-                row.querySelectorAll("input").forEach(input => {
+                row.querySelectorAll("input, select").forEach(input => {
                     var name = input.getAttribute("name");
                     if (name) {
+                        // Update the name attribute to the new index
                         var newName = name.replace(/\[\d+\]/, "[" + index + "]");
                         input.setAttribute("name", newName);
                     }
 
                     var id = input.getAttribute("id");
                     if (id) {
+                        // Update the id attribute to the new index
                         var newId = id.replace(/_\d+_/, "_" + index + "_");
                         input.setAttribute("id", newId);
                     }
@@ -152,9 +147,7 @@
             });
         }
     </script>
-    <script type="application/json" id="productData">
-        @Html.Raw(Json.Serialize(Model.Products))
-    </script>
+
 }
 
 <style>

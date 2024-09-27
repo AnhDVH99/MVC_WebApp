@@ -1,11 +1,13 @@
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using ASP.NET_Core_MVC_Piacom.Validators;
 
 namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels;
 
 public class EditCustomerRequest
 {
+    [Required]
     public Guid CustomerID { get; set; }
 
     [Required(ErrorMessage = "Please enter your name!")]
@@ -23,11 +25,13 @@ public class EditCustomerRequest
     public string? State { get; set; }
     public string? PostalCode { get; set; }
     public string? Country { get; set; }
+
+    [Required]
     public Guid SaleRepEmployeeID { get; set; }
 
     public Guid CreditLimitID { get; set; }
 
-    public List<CreditLimit> CreditLimits { get; set; }
-    public IEnumerable<SelectListItem> Employees { get; set; }
+    public List<CreditLimit>? CreditLimits { get; set; }
+    public IEnumerable<SelectListItem>? Employees { get; set; }
 
 }

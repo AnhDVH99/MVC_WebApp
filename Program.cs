@@ -20,11 +20,11 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PiacomDbAuthConnectionString")));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<AuthDbContext>();
+    .AddEntityFrameworkStores<AuthDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.Configure <IdentityOptions > (options =>
 {
-    options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
@@ -50,8 +50,9 @@ builder.Services.AddFluentValidationAutoValidation()
         fv.RegisterValidatorsFromAssemblyContaining<PaymentValidator>();
         fv.RegisterValidatorsFromAssemblyContaining<AddCustomerRequestValidator>();
         fv.RegisterValidatorsFromAssemblyContaining<AccountValidator>();
+        fv.RegisterValidatorsFromAssemblyContaining<EditCustomerRequestValidator>();
+        fv.RegisterValidatorsFromAssemblyContaining<UnitValidator>();
     });
-
 
 var app = builder.Build();
 

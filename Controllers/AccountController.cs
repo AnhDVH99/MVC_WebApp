@@ -29,7 +29,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(registerViewModel);
             }
 
             var identityUser = new IdentityUser
@@ -66,6 +66,11 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(loginViewModel);
+            }
+
             var signInResult = await signInManager
                 .PasswordSignInAsync(loginViewModel.Username, loginViewModel.Password, false, false);
 
@@ -77,8 +82,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 }
                 return RedirectToAction("Index", "Home");
             }
-            // Fail
-            return View();
+            return View(loginViewModel);
         }
 
         [HttpGet]

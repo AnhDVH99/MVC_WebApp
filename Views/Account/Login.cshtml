@@ -10,16 +10,16 @@
                 Register
             </h1>
             <form asp-action="Login" asp-controller="Account" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <div class=" mb-3">
                     <label class="form-label">Username</label>
-                    <input type="text" id="username" class="form-control" asp-for="Username" />
+                    <input type="text" id="username" class="form-control" asp-for="Username" data-val="true" required />
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
 
                 <div class=" mb-3">
                     <label class="form-label">Password</label>
-                    <input type="password" id="password" class="form-control" asp-for="Password" />
+                    <input type="password" id="password" class="form-control" asp-for="Password" data-val="true" required />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 

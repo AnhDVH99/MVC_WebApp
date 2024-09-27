@@ -10,6 +10,7 @@ using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using ASP.NET_Core_MVC_Piacom.Repositories;
 using ASP.NET_Core_MVC_Piacom.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
@@ -20,12 +21,15 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         private readonly IOrderRepository orderRepository;
         private readonly ICustomerRepository customerRepository;
         private readonly IEmployeeRepository employeeRepository;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository, IEmployeeRepository employeeRepository)
+        public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository,
+            IEmployeeRepository employeeRepository, UserManager<IdentityUser> userManager)
         {
             this.orderRepository = orderRepository;
             this.customerRepository = customerRepository;
             this.employeeRepository = employeeRepository;
+            this.userManager = userManager;
         }
 
         // GET: Orders
@@ -57,6 +61,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddOrderRequest addOrderRequest)
         {
+            var currentUser = await userManager.GetUserAsync(User);
             var order = new Order
             {
                 OrderDate = addOrderRequest.OrderDate,
@@ -67,7 +72,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 CustomerID = addOrderRequest.CustomerID,
                 EmployeeID = addOrderRequest.EmployeeID,
                 SysD = DateTime.Now,
-                SysU = User.Identity.Name
+                SysU = currentUser?.UserName
             };
             await orderRepository.AddAsync(order);
 
@@ -85,6 +90,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
+
             var employees = await employeeRepository.GetAllAsync();
             var customers = await customerRepository.GetAllAsync();
             var order = await orderRepository.GetAsync(id);
@@ -123,6 +129,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditOrderRequest editOrderRequest)
         {
+            var currentUser = await userManager.GetUserAsync(User);
             var order = new Order
             {
                 OrderID = editOrderRequest.OrderID,
@@ -133,7 +140,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 Comment = editOrderRequest.Comment,
                 CustomerID = editOrderRequest.CustomerID,
                 EmployeeID = editOrderRequest.EmployeeID,
-                SysU = User.Identity.Name,
+                SysU = currentUser?.UserName,
                 SysD = DateTime.Now,
             };
             var updatedOrder = await orderRepository.UpdateAsync(order);

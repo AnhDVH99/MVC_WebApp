@@ -5,6 +5,7 @@ namespace ASP.NET_Core_MVC_Piacom.Models.Domain;
 
 public class CreditLimit
 {
+    
     [Required]
     public Guid CreditLimitID { get; set; }
 
@@ -25,5 +26,5 @@ public class CreditLimit
 
     public string? OverDue { get; set; }
 
-    public Customer Customer { get; set; }
+    public Customer? Customer { get; set; }
 }

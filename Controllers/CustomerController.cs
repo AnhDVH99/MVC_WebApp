@@ -33,7 +33,7 @@ public class CustomerController : Controller
         {
             Employees = employees.Select(e => new SelectListItem
             {
-                Text = e.FirstName,
+                Text = e.FirstName + " " + e.LastName,
                 Value = e.EmployeeID.ToString()
             }),
         };
@@ -50,9 +50,9 @@ public class CustomerController : Controller
             var employees = await employeeRepository.GetAllAsync();
             addCustomerRequest.Employees = employees.Select(e => new SelectListItem
             {
-                Text = e.FirstName,
+                Text = e.FirstName + "" + e.LastName,
                 Value = e.EmployeeID.ToString()
-            });
+            }).ToList();
             var errors = ModelState.Values.SelectMany(v => v.Errors)
                                .Select(e => e.ErrorMessage)
                                .ToList();
@@ -112,7 +112,7 @@ public class CustomerController : Controller
             State = customer.State,
             Employees = employees.Select(e => new SelectListItem
             {
-                Text = e.FirstName,
+                Text = e.FirstName + " " + e.LastName,
                 Value = e.EmployeeID.ToString()
             }),
             CreditLimits = customer.CreditLimits.ToList()
@@ -124,6 +124,29 @@ public class CustomerController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(EditCustomerRequest editCustomerRequest)
     {
+        if (!ModelState.IsValid)
+        {
+            var employees = await employeeRepository.GetAllAsync();
+            editCustomerRequest.Employees = employees.Select(e => new SelectListItem
+            {
+                Text = e.FirstName + " " + e.LastName,
+                Value = e.EmployeeID.ToString()
+            });
+
+
+            foreach (var state in ModelState)
+            {
+                var key = state.Key;
+                var errors = state.Value.Errors;
+                foreach (var error in errors)
+                {
+                    // Log the key and error message
+                    Console.WriteLine($"Key: {key}, Error: {error.ErrorMessage}");
+                }
+            }
+
+            return View(editCustomerRequest);
+        }
         var customer = new Customer
         {
             CustomerID = editCustomerRequest.CustomerID,

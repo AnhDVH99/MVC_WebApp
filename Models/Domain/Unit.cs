@@ -7,9 +7,11 @@ public class Unit
 {
     [Required]
     public Guid UnitID { get; set; }
-    
+
+    [Required(ErrorMessage = "Please enter Unit code")]
     public string UnitCode { get; set; }
 
+    [Required(ErrorMessage = "Please enter Unit name")]
     public string UnitName { get; set; }
 
 

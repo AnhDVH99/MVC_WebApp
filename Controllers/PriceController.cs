@@ -2,6 +2,7 @@
 using ASP.NET_Core_MVC_Piacom.Models.ViewModels;
 using ASP.NET_Core_MVC_Piacom.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,12 +15,14 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         private readonly IPriceRepository priceRepository;
         private readonly IPriceDetailRepository priceDetailRepository;
         private readonly IProductRepository productRepository;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public PriceController(IPriceRepository priceRepository, IPriceDetailRepository priceDetailRepository, IProductRepository productRepository)
+        public PriceController(IPriceRepository priceRepository, IPriceDetailRepository priceDetailRepository, IProductRepository productRepository, UserManager<IdentityUser> userManager )
         {
             this.priceRepository = priceRepository;
             this.priceDetailRepository = priceDetailRepository;
             this.productRepository = productRepository;
+            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -32,14 +35,15 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddPriceRequest addPriceRequest)
         {
-            var priceDetails = await priceDetailRepository.GetAllAsync();
+           var currentUser = await userManager.GetUserAsync(User);
             var price = new Price
             {
                 PriceCode = addPriceRequest.PriceCode,
                 FromDate = addPriceRequest.FromDate,
                 ToDate = addPriceRequest.ToDate,
-                SysU = addPriceRequest.SysU,
-                SysD = DateTime.Now
+                SysU = currentUser?.UserName,
+                SysD = DateTime.Now,
+               
             };
             var createdPrice = await priceRepository.AddAsync(price);
             return RedirectToAction("Edit", new { id = createdPrice.PriceID });
@@ -58,7 +62,12 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         {
 
             var price = await priceRepository.GetAsync(id);
-            var products = await productRepository.GetAllAsync();
+            var productList = await productRepository.GetAllAsync();
+            var products = productList.Select(p => new SelectListItem
+            {
+                Value = p.ProductID.ToString(),
+                Text = p.ProductName
+            }).ToList();
             if (price == null)
             {
                 return NotFound();
@@ -73,11 +82,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 SysU = price.SysU,
                 SysD = DateTime.Now,
                 PriceDetails = price.PriceDetails.ToList(),
-                Products = products.Select(p => new SelectListItem
-                {
-                    Value = p.ProductID.ToString(),
-                    Text = p.ProductName
-                }).ToList()
+                Products = products // Populate products here
             };
 
             return View(editPriceRequest);
@@ -86,15 +91,28 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditPriceRequest editPriceRequest)
         {
-
-            var priceDetails = await priceDetailRepository.GetAllAsync();
+            var currentUser = await userManager.GetUserAsync(User);
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                {
+                    var key = state.Key;
+                    var errors = state.Value.Errors;
+                    foreach (var error in errors)
+                    {
+                        // Log the key and error message
+                        Console.WriteLine($"Key: {key}, Error: {error.ErrorMessage}");
+                    }
+                }
+                return RedirectToAction("Edit", new { id = editPriceRequest.PriceID });
+            }
             var price = new Price
             {
                 PriceID = editPriceRequest.PriceID,
                 PriceCode = editPriceRequest.PriceCode,
                 FromDate = editPriceRequest.FromDate,
                 ToDate = editPriceRequest.ToDate,
-                SysU = editPriceRequest.SysU,
+                SysU = currentUser?.UserName,
                 SysD = DateTime.Now,
                 PriceDetails = editPriceRequest.PriceDetails != null
                        ? editPriceRequest.PriceDetails.ToList()

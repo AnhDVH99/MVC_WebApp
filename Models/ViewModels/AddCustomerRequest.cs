@@ -26,6 +26,6 @@ public class AddCustomerRequest
     public Guid CreditLimitID { get; set; }
 
     public List<CreditLimit>? CreditLimits { get; set; }
-    public IEnumerable<SelectListItem>?  Employees { get; set; }
+    public IEnumerable<SelectListItem>? Employees { get; set; }
 }
 

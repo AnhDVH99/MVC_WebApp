@@ -166,15 +166,15 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations.AuthDb
                         {
                             Id = "b6c11373-3183-445b-b8f6-e0ad8215dcca",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "07411945-c889-4457-9a1f-c6ef68da8988",
+                            ConcurrencyStamp = "298db858-6331-423e-94ee-b0d18b38c673",
                             Email = "superadmin@piacom.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@PIACOM.COM",
                             NormalizedUserName = "SUPERADMIN@PIACOM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMSF9xnYtBZf0OjKAqkrej9HvIoYjKvYqDKaJj151mzqEec253o5j020nsqv42Zqtg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBsWz10Eb095EP1sToZwZrpsOmF92/7BfH1n+YYmm3cOzQFkC4raztTU5HV557Qx9Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c4be253a-0983-43fc-a556-08c9fdb0ec4b",
+                            SecurityStamp = "0f65dd19-8838-4f80-8f76-ab7f45e84c2e",
                             TwoFactorEnabled = false,
                             UserName = "superadmin@piacom.com"
                         });

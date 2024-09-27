@@ -1,92 +1,110 @@
 ﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddCustomerRequest
 
-<div class="bg-secondary bg-opacity-10 py-2">
-    <div class="container">
-        <h1>Add customer</h1>
-    </div>
-</div>
+<h1 class="text-center">Add Customer</h1>
 
 <div class="container py-5">
     @if (Model != null)
     {
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">Customer Name</label>
-                    <input type="text" class="form-control short-input" id="cusName" asp-for="CustomerName" />
-                    <span asp-validation-for="CustomerName" class="text-danger"></span>
-                </div>
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="col-md-3">
-                    <label class="form-label">Phone</label>
-                    <input type="text" class="form-control short-input" id="phone" asp-for="Phone" />
-                    <span asp-validation-for="Phone" class="text-danger"></span>
-                </div>
-            </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" class="form-control" id="cusName" asp-for="CustomerName" placeholder="Customer Name" />
+                            </div>
+                            <span asp-validation-for="CustomerName" class="text-danger"></span>
+                        </div>
 
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">AddressLine1</label>
-                    <input type="text" class="form-control short-input" id="address1" asp-for="Address1" />
-                    <span asp-validation-for="Address1" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">AddressLine2</label>
-                    <input type="text" class="form-control short-input" id="address2" asp-for="Address2" />
-                    <span asp-validation-for="Address2" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">City</label>
-                    <input type="text" class="form-control short-input" id="city" asp-for="City" />
-                    <span asp-validation-for="City" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">State</label>
-                    <input type="text" class="form-control short-input" id="state" asp-for="State" />
-                    <span asp-validation-for="State" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">PostalCode</label>
-                    <input type="text" class="form-control short-input" id="postalCode" asp-for="PostalCode" />
-                    <span asp-validation-for="PostalCode" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">Country</label>
-                    <input type="text" class="form-control short-input" id="country" asp-for="Country" />
-                    <span asp-validation-for="Country" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">SaleRepEmployeeID</label>
-                    <select type="text" class="form-control short-input" asp-items="@Model.Employees" asp-for="SaleRepEmployeeID">
-
-                    </select>
-                    @* <span asp-validation-for="SaleRepEmployeeID" class="text-danger"></span> *@
-                </div>
-
-                <input type="text" class="form-control short-input" id="creditLimitID" asp-for="CreditLimitID" hidden/>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="d-flex">
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                                <input type="text" class="form-control" id="phone" asp-for="Phone" placeholder="Phone" />
+                            </div>
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
                     </div>
-                </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-house-fill"></i></span>
+                                <input type="text" class="form-control" id="address1" asp-for="Address1" placeholder="Address Line 1" />
+                            </div>
+                            <span asp-validation-for="Address1" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-house-door-fill"></i></span>
+                                <input type="text" class="form-control" id="address2" asp-for="Address2" placeholder="Address Line 2" />
+                            </div>
+                            <span asp-validation-for="Address2" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
+                                <input type="text" class="form-control" id="city" asp-for="City" placeholder="City" />
+                            </div>
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-geo-fill"></i></span>
+                                <input type="text" class="form-control" id="state" asp-for="State" placeholder="State" />
+                            </div>
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-postcard-fill"></i></span>
+                                <input type="text" class="form-control" id="postalCode" asp-for="PostalCode" placeholder="Postal Code" />
+                            </div>
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-globe"></i></span>
+                                <input type="text" class="form-control" id="country" asp-for="Country" placeholder="Country" />
+                            </div>
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Sale Rep</label>
+                            <select class="form-control" asp-items="@Model.Employees" asp-for="SaleRepEmployeeID">
+                                <option value="">Select a Sales Rep</option>
+                            </select>
+                            <span asp-validation-for="SaleRepEmployeeID" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Create</button>
+                                <a asp-action="List" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left-circle"></i> Back to List
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     }
     else
     {
@@ -95,9 +113,23 @@
 </div>
 
 <style>
-    .short-input {
-        max-width: 250px; /* Adjust the width as needed */
+    .input-group {
+        margin-bottom: 10px; /* Add spacing between input groups */
     }
+
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+    }
+
+    .btn {
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+        .btn:hover {
+            background-color: #0056b3; /* Darker shade on hover for primary button */
+            transform: scale(1.05); /* Slightly enlarge the button */
+        }
 </style>
 
 @await Html.PartialAsync("_ValidationScriptsPartial")
