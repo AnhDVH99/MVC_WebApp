@@ -23,8 +23,6 @@ public class AddCustomerRequest
     public string? Country { get; set; }
     public Guid SaleRepEmployeeID { get; set; }
 
-    public Guid CreditLimitID { get; set; }
-
     public List<CreditLimit>? CreditLimits { get; set; }
     public IEnumerable<SelectListItem>? Employees { get; set; }
 }

@@ -5,8 +5,6 @@ namespace ASP.NET_Core_MVC_Piacom.Models.Domain;
 
 public class CreditLimit
 {
-    
-    [Required]
     public Guid CreditLimitID { get; set; }
 
     [Required]

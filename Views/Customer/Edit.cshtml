@@ -95,7 +95,7 @@
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <tr>
                                 <td>
-                                    <input type="hidden" asp-for="CreditLimits[i].CreditLimitID" class="form-control"/>
+                                    <input type="hidden" asp-for="CreditLimits[i].CreditLimitID" class="form-control" />
                                     <input type="number" asp-for="CreditLimits[i].Total" class="form-control" required/>
                                 </td>
                                 <td>
@@ -146,7 +146,7 @@
                 var newRow = `
                                                     <tr>
                                                         <td>
-                                                            <input type="hidden" name="CreditLimits[` + rowCount + `].CreditLimitID" class="form-control" required />
+                                                            <input type="hidden" name="CreditLimits[` + rowCount + `].CreditLimitID" class="form-control"  />
                                                             <input type="number" name="CreditLimits[` + rowCount + `].Total" class="form-control" required />
                                                         </td>
                                                         <td>

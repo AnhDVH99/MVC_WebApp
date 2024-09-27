@@ -75,7 +75,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             {
                 var editOrderRequest = new EditCreditRequest
                 {
-                    CreditLimitID = (Guid)credit.CreditLimitID,
+                    CreditLimitID = credit.CreditLimitID,
                     CustomerID = credit.CustomerID,
                     FromDate = credit.FromDate,
                     ToDate = credit.ToDate,

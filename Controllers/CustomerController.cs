@@ -35,7 +35,7 @@ public class CustomerController : Controller
             {
                 Text = e.FirstName + " " + e.LastName,
                 Value = e.EmployeeID.ToString()
-            }),
+            })
         };
         return View(model);
     }
@@ -70,8 +70,7 @@ public class CustomerController : Controller
             State = addCustomerRequest.State,
             PostalCode = addCustomerRequest.PostalCode,
             Country = addCustomerRequest.Country,
-            SaleRepEmployeeID = addCustomerRequest.SaleRepEmployeeID,
-            CreditLimitID = Guid.NewGuid(),
+            SaleRepEmployeeID = addCustomerRequest.SaleRepEmployeeID
         };
         await customerRepository.AddAsync(customer);
 
@@ -105,7 +104,6 @@ public class CustomerController : Controller
             Address2 = customer.AddressLine2,
             City = customer.City,
             Country = customer.Country,
-            CreditLimitID = customer.CreditLimitID,
             Phone = customer.Phone,
             PostalCode = customer.PostalCode,
             SaleRepEmployeeID = customer.SaleRepEmployeeID,
@@ -159,7 +157,6 @@ public class CustomerController : Controller
             PostalCode = editCustomerRequest.PostalCode,
             Country = editCustomerRequest.Country,
             SaleRepEmployeeID = editCustomerRequest.SaleRepEmployeeID,
-            CreditLimitID = editCustomerRequest.CreditLimitID,
             CreditLimits = editCustomerRequest.CreditLimits != null
                    ? editCustomerRequest.CreditLimits.ToList()
                    : new List<CreditLimit>()

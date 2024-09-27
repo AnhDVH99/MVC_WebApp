@@ -29,11 +29,9 @@ public class Customer
 
     public Guid SaleRepEmployeeID { get; set; }
 
-    public Guid CreditLimitID { get; set; }
-
     public ICollection<Payment>? Payments { get; set; }
 
-    public ICollection<CreditLimit> CreditLimits { get; set; }
+    public ICollection<CreditLimit>? CreditLimits { get; set; }
 
     public ICollection<Order>? Orders { get; set; }
     
