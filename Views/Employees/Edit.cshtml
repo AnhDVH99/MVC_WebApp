@@ -1,66 +1,90 @@
 ﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.EditEmployeeRequest
 
-<div class="bg-secondary bg-opacity-10 py-2">
-    <div class="container">
-        <h1>Add new employee</h1>
+
+    <div class="container" >
+    <h1 class="mb-4 text-center">Edit Employee</h1>
+    </div>
+
+
+<div class="container py-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" asp-for="EmployeeID" />
+
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <!-- Row 1: First Name and Last Name -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" asp-for="FirstName" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" asp-for="LastName" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Row 2: Email and Phone -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input type="email" class="form-control" asp-for="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" asp-for="Phone" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Row 3: Job Title -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label asp-for="JobTitle" class="form-label">Job Title</label>
+                        <input type="text" class="form-control" asp-for="JobTitle" />
+                        <span asp-validation-for="JobTitle" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Buttons: Update and Delete -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-primary me-2">Update</button>
+                            <button type="button" class="btn btn-danger" onclick="confirmDeletion()">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Confirmation Message for Deletion -->
+            <div id="deleteConfirmation" style="display:none;" class="alert alert-warning mt-3">
+                <strong>Are you sure you want to delete this employee?</strong>
+                <form asp-action="Delete" method="post" class="mt-2">
+                    <input type="hidden" asp-for="EmployeeID" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelDeletion()">Cancel</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="container py-5">
-    <form method="post">
-        <input type="text" class="form-control" id="employeeID" asp-for="EmployeeID" hidden />
-
-        <!-- Validation Summary -->
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <!-- Row 1: First Name and Last Name -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">First Name</label>
-                <input type="text" class="form-control" id="emFirstName" asp-for="FirstName" />
-                <span class="text-danger" asp-validation-for="FirstName"></span>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="emLastName" asp-for="LastName" />
-                <span class="text-danger" asp-validation-for="LastName"></span>
-            </div>
-        </div>
-
-        <!-- Row 2: Email and Phone -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" asp-for="Email" />
-                <span class="text-danger" asp-validation-for="Email"></span>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Phone</label>
-                <input type="text" class="form-control" id="phone" asp-for="Phone" />
-                <span class="text-danger" asp-validation-for="Phone"></span>
-            </div>
-        </div>
-
-        <!-- Row 3: Job Title -->
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <label class="form-label">Job title</label>
-                <input type="text" class="form-control" id="jobtitle" asp-for="JobTitle" />
-                <span class="text-danger" asp-validation-for="JobTitle"></span>
-            </div>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="row">
-            <div class="col-md-12">
-                <button type="submit" class="btn btn-success">Submit</button>
-            </div>
-        </div>
-    </form>
-</div>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        function confirmDeletion() {
+            document.getElementById('deleteConfirmation').style.display = 'block';
+        }
+
+        function cancelDeletion() {
+            document.getElementById('deleteConfirmation').style.display = 'none';
+        }
+    </script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

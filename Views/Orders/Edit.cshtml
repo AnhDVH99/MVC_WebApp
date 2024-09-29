@@ -5,67 +5,200 @@
 @{
 }
 
-
-<div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
-        <h1> Edit order  </h1>
+        <h1 class="mb-4 text-center"> Edit order  </h1>
     </div>
-</div>
+
 
 <div class="container py-5">
     <form method="post">
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" class="form-control" id="OrderID" asp-for="OrderID" />
-        <div class="mb-3">
-            <label class="form-label">Order Date</label>
-            <input type="date" class="form-control" id="orderDate" asp-for="OrderDate"/>
-             <span class="text-danger" asp-validation-for="OrderDate"></span>
-        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" class="form-control" asp-for="OrderID" />
 
-        <div class="mb-3">
-            <label class="form-label">Required Date</label>
-            <input type="date" class="form-control" id="requiredDate" asp-for="RequiredDate"/>
-             <span class="text-danger" asp-validation-for="RequiredDate"></span>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Shipped Date</label>
-            <input type="date" class="form-control" id="shippedDate" asp-for="ShippedDate"/>
-             <span class="text-danger" asp-validation-for="ShippedDate"></span>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Order Date</label>
+                <input type="date" class="form-control" asp-for="OrderDate" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Required Date</label>
+                <input type="date" class="form-control" asp-for="RequiredDate" />
+                <span asp-validation-for="RequiredDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Shipped Date</label>
+                <input type="date" class="form-control" asp-for="ShippedDate" />
+                <span asp-validation-for="ShippedDate" class="text-danger"></span>
+            </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Order Status</label>
-            <input type="text" class="form-control" id="orderStatus" asp-for="OrderStatus"/>
-             <span class="text-danger" asp-validation-for="OrderStatus"></span>
+            <input type="text" class="form-control" asp-for="OrderStatus" />
+            <span asp-validation-for="OrderStatus" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Comment</label>
-            <input type="text" class="form-control" id="commnent" asp-for="Comment"/>
-             <span class="text-danger" asp-validation-for="Comment"></span>
+            <input type="text" class="form-control" asp-for="Comment" />
+            <span asp-validation-for="Comment" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Customer Name</label>
-            <select class="form-select" asp-items="@Model.Customers" asp-for="CustomerID">
 
-            </select>
-             <span class="text-danger" asp-validation-for="CustomerID"></span>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Customer Name</label>
+                <select class="form-select" asp-items="@Model.Customers" asp-for="CustomerID">
+                </select>
+                <span asp-validation-for="CustomerID" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Employee ID</label>
+                <select class="form-select" asp-items="@Model.Employees" asp-for="EmployeeID">
+                </select>
+                <span asp-validation-for="EmployeeID" class="text-danger"></span>
+            </div>
         </div>
-        <div class="mb-3">
-            <label class="form-label">EmployeeID</label>
-            <select type="text" class="form-control" asp-items="@Model.Employees" asp-for="EmployeeID">
 
-            </select>
-             <span class="text-danger" asp-validation-for="EmployeeID"></span>
+        <input type="hidden" class="form-control" asp-for="SysU" />
+        <input type="hidden" class="form-control" asp-for="SysD" />
+
+
+
+        <div class="container">
+            <h1 class="styled-heading">Order Details</h1>
         </div>
-            <input type="text" class="form-control" id="sysU" asp-for="SysU"/>
-            <input type="number" class="form-control" id="sysD" asp-for="SysD"/>
-        <div class="mb-3">
-            <button type="submit" class="btn btn-success">Submit</button>
+
+
+        <div class="form-group">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Discount</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="orderDetailRows">
+                    @for (int i = 0; i < Model.OrderDetails.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <input type="hidden" asp-for="OrderDetails[i].OrderDetailID" class="form-control" />
+                                <input type="number" asp-for="OrderDetails[i].Quantity" class="form-control" />
+                            </td>
+                            <td>
+                                <input type="number" asp-for="OrderDetails[i].Price" class="form-control" />
+                            </td>
+                            <td>
+                                <input type="number" asp-for="OrderDetails[i].Discount" class="form-control" />
+                            </td>
+                            <td>
+                                <input type="number" asp-for="OrderDetails[i].TotalAmount" class="form-control" />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" onclick="addOrderDetailRow()">Add Price Detail</button>
+            </div>
         </div>
-        </form>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-dark">Update</button>
+                    <button type="submit" class="btn btn-danger ms-2" asp-action="Delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
+
+
+
+
+@section Scripts {
+    <script>
+        // Function to add a new row for Order details
+        function addOrderDetailRow() {
+            var rowCount = document.getElementById('orderDetailRows').rows.length;
+            var newRow = `
+              <tr>
+                  <td>
+                      <input type="hidden" name="OrderDetails[` + rowCount + `].OrderDetailID" class="form-control"  />
+                      <input type="number" name="OrderDetails[` + rowCount + `].Quantity" class="form-control"  />
+                  </td>
+                  <td>
+                      <input type="number" name="OrderDetails[` + rowCount + `].Price" class="form-control" />
+                  </td>
+                  <td>
+                      <input type="number" name="OrderDetails[` + rowCount + `].Discount" class="form-control"  />
+                  </td>
+                  <td>
+                      <input type="number" name="OrderDetails[` + rowCount + `].TotalAmount" class="form-control"  />
+                  </td>
+                  <td>
+                      <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
+                  </td>
+              </tr>`;
+            document.getElementById('orderDetailRows').insertAdjacentHTML('beforeend', newRow);
+        }
+
+        // Function to remove a row
+        function removeRow(button) {
+            var row = button.closest("tr");
+            row.remove();
+
+            // Cap nhat cac hang con lai
+            var rows = document.querySelectorAll("#orderDetailRows tr");
+            rows.forEach((row, index) => {
+                row.querySelectorAll("input").forEach(input => {
+                    var name = input.getAttribute("name");
+                    if (name) {
+                        // thay doi chi so trong name tu CreditLimits[i] thanh CreditLimits[index]
+                        var newName = name.replace(/\[\d+\]/, "[" + index + "]");
+                        input.setAttribute("name", newName);
+                    }
+
+                    var id = input.getAttribute("id");
+                    if (id) {
+                        // thay doi chi so trong id tu CreditLimits_i_ thanh CreditLimits_index_
+                        var newId = id.replace(/_\d+_/, "_" + index + "_");
+                        input.setAttribute("id", newId);
+                    }
+                });
+            });
+        }
+    </script>
+
+}
+
+<style>
+    .short-input {
+        max-width: 250px;
+    }
+
+    .styled-heading {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: black;
+        background: linear-gradient(to right, #6a11cb, black);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 10px 0;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+
 @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
