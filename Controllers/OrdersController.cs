@@ -90,7 +90,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-
+            var currentUser = userManager.GetUserAsync(User);
             var employees = await employeeRepository.GetAllAsync();
             var customers = await customerRepository.GetAllAsync();
             var order = await orderRepository.GetAsync(id);
@@ -106,7 +106,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                     Comment = order.Comment,
                     CustomerID = order.CustomerID,
                     EmployeeID = order.EmployeeID,
-                    SysU = User.Identity.Name,
+                    SysU = order.SysU,
                     SysD = DateTime.Now,
                     Employees = employees.Select(e => new SelectListItem
                     {
@@ -119,7 +119,8 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                         Text = x.CustomerName,
                         Value = x.CustomerID.ToString(),
                         Selected = (x.CustomerID == order.CustomerID)
-                    })
+                    }),
+                    OrderDetails = order.OrderDetails.ToList()
                 };
                 return View(editOrderRequest);
             }
@@ -142,6 +143,9 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 EmployeeID = editOrderRequest.EmployeeID,
                 SysU = currentUser?.UserName,
                 SysD = DateTime.Now,
+                OrderDetails = editOrderRequest.OrderDetails != null
+                       ? editOrderRequest.OrderDetails.ToList()
+                       : new List<OrderDetail>()
             };
             var updatedOrder = await orderRepository.UpdateAsync(order);
             if (updatedOrder != null)

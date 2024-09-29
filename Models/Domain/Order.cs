@@ -15,8 +15,7 @@ public class Order
     [Required]
     public string RequiredDate { get; set; }
 
-    [Required]
-    public string ShippedDate { get; set; }
+    public string? ShippedDate { get; set; }
 
     [Required]
     public string OrderStatus { get; set; }

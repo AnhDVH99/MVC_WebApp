@@ -13,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+
+
 builder.Services.AddDbContext<PiacomDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PiacomDbConnectionString")));
 
@@ -32,6 +36,7 @@ builder.Services.Configure <IdentityOptions > (options =>
     options.Password.RequiredLength = 6;
 });
 
+// Add Repos
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -41,18 +46,13 @@ builder.Services.AddScoped<IPriceDetailRepository, PriceDetailRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 
+//Add FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<PaymentValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AddCustomerRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AccountValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<EditCustomerRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UnitValidator>();
 
-
-builder.Services.AddFluentValidationAutoValidation()
-    .AddFluentValidation(fv =>
-    {
-        // Manually registering the validators from the current assembly
-        fv.RegisterValidatorsFromAssemblyContaining<PaymentValidator>();
-        fv.RegisterValidatorsFromAssemblyContaining<AddCustomerRequestValidator>();
-        fv.RegisterValidatorsFromAssemblyContaining<AccountValidator>();
-        fv.RegisterValidatorsFromAssemblyContaining<EditCustomerRequestValidator>();
-        fv.RegisterValidatorsFromAssemblyContaining<UnitValidator>();
-    });
 
 var app = builder.Build();
 

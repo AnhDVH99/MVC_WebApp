@@ -43,12 +43,6 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             return piacomDbContext.Prices.Include(c => c.PriceDetails).FirstOrDefaultAsync(x => x.PriceID == id);
         }
 
-        public async Task<Price?> GetByIdAsync(Guid id)
-        {
-            return await piacomDbContext.Prices
-            .Include(c => c.PriceDetails) // Include related CreditLimits
-            .FirstOrDefaultAsync(c => c.PriceID == id); // Query by CustomerID
-        }
 
         public async Task<Price?> UpdateAsync(Price price)
         {

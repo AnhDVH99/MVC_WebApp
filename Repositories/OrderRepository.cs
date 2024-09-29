@@ -1,6 +1,7 @@
 ﻿using ASP.NET_Core_MVC_Piacom.Data;
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 
 namespace ASP.NET_Core_MVC_Piacom.Repositories
 {
@@ -41,24 +42,71 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
 
         public Task<Order?> GetAsync(Guid id)
         {
-            return piacomDbContext.Orders.FirstOrDefaultAsync(x => x.OrderID == id);
+            return piacomDbContext.Orders.Include(od => od.OrderDetails).FirstOrDefaultAsync(x => x.OrderID == id);
 
         }
 
         public async Task<Order?> UpdateAsync(Order order)
         {
-            var existingOrder = await piacomDbContext.Orders.FindAsync(order.OrderID);
+            var existingOrder = await piacomDbContext.Orders
+                .Include(c => c.OrderDetails)
+                .FirstOrDefaultAsync(c => c.OrderID == order.OrderID);
             if (existingOrder != null)
             {
-                existingOrder.OrderDate = order.OrderDate;
-                existingOrder.RequiredDate = order.RequiredDate;
-                existingOrder.ShippedDate = order.ShippedDate;
-                existingOrder.OrderStatus = order.OrderStatus;
-                existingOrder.Comment = order.Comment;
-                existingOrder.CustomerID = order.CustomerID;
-                existingOrder.EmployeeID = order.EmployeeID;
-                existingOrder.SysU = order.SysU;
-                existingOrder.SysD = order.SysD;
+                //Update customer entity
+                piacomDbContext.Entry(existingOrder).CurrentValues.SetValues(order);
+
+                var updatedOrderDetails = order.OrderDetails ?? new List<OrderDetail>();
+
+                var newOrderDetails = updatedOrderDetails
+                    .Where(updatePD => updatePD.OrderDetailID == Guid.Empty)
+                    .ToList();
+
+                var existingOrderDetailsToUpdate = updatedOrderDetails
+                    .Where(updateOD => existingOrder.OrderDetails
+                    .Any(existingOD => existingOD.OrderDetailID == updateOD.OrderDetailID))
+                    .ToList();
+
+
+                var lstNotExistOrderDetail = new List<OrderDetail>();
+
+                if (lstNotExistOrderDetail.Count > 0)
+                    existingOrder.OrderDetails.AddRange(lstNotExistOrderDetail);
+
+                if (newOrderDetails.Count > 0)
+                {
+                    foreach (var newOrderDetail in newOrderDetails)
+                    {
+                        newOrderDetail.OrderID = order.OrderID;
+                    }
+                }
+                existingOrder.OrderDetails.AddRange(newOrderDetails);
+                if (existingOrderDetailsToUpdate.Count > 0)
+                {
+                    foreach (var existingOrderDetails in existingOrderDetailsToUpdate)
+                    {
+                        var dbOrderDetail = existingOrder.OrderDetails
+                            .FirstOrDefault(od => od.OrderID == existingOrderDetails.OrderID);
+
+                        if (dbOrderDetail != null)
+                        {
+                            dbOrderDetail.Quantity = existingOrderDetails.Quantity;
+                            dbOrderDetail.Price = existingOrderDetails.Price;
+                            dbOrderDetail.Discount = existingOrderDetails.Discount;
+                            dbOrderDetail.TotalAmount = existingOrderDetails.TotalAmount;
+                            dbOrderDetail.DueDate = existingOrderDetails.DueDate;
+                        }
+                    }
+                }
+
+                var orderDetailsToRemove = existingOrder.OrderDetails
+                     .Where(existingOD => !updatedOrderDetails
+                         .Any(updatedOD => updatedOD.OrderDetailID == existingOD.OrderDetailID))
+                     .ToList();
+                if (orderDetailsToRemove.Count > 0)
+                {
+                    piacomDbContext.OrderDetails.RemoveRange(orderDetailsToRemove);
+                }
 
                 await piacomDbContext.SaveChangesAsync();
                 return existingOrder;

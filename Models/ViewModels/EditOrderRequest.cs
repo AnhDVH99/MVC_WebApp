@@ -13,13 +13,12 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
         [Required(ErrorMessage ="Please enter order date!")]
         public string OrderDate { get; set; }
 
-        [Required(ErrorMessage = "Please enter order date!")]
+        [Required(ErrorMessage = "Please enter required date!")]
         public string RequiredDate { get; set; }
 
-        [Required(ErrorMessage = "Please enter order date!")]
-        public string ShippedDate { get; set; }
 
-        [Required(ErrorMessage = "Please enter order date!")]
+        public string? ShippedDate { get; set; }
+
         public string? OrderStatus { get; set; }
 
         public string? Comment { get; set; }
@@ -36,7 +35,9 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
 
         public DateTime SysD { get; set; }
 
-        public Customer Customer { get; set; } 
+        public Customer Customer { get; set; }
+
+        public List<OrderDetail>? OrderDetails { get; set; }
         public IEnumerable<SelectListItem> Customers { get; set; }
 
         public IEnumerable<SelectListItem> Employees { get; set; }
