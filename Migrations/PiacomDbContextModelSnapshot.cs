@@ -161,7 +161,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippedDate")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SysD")

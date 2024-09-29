@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    [Migration("20240927040142_ThirdMig")]
-    partial class ThirdMig
+    [Migration("20240929191703_updateOrderField_3")]
+    partial class updateOrderField_3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

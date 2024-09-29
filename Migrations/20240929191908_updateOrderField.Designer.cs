@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    [Migration("20240925193219_second")]
-    partial class second
+    [Migration("20240929191908_updateOrderField")]
+    partial class updateOrderField
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,9 +78,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
 
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CreditLimitID")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -167,7 +164,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippedDate")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SysD")
@@ -332,7 +328,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductName")
