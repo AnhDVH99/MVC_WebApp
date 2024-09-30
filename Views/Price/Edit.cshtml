@@ -45,6 +45,7 @@
                 <thead>
                     <tr>
                         <th>Product Name</th>
+                        <th>Unit Name</th>
                         <th>VAT</th>
                         <th>EnvirontmentTax</th>
                         <th>Actions</th>
@@ -59,7 +60,12 @@
                                 </select>
                             </td>
                             <td>
-
+                                <select asp-for="PriceDetails[i].UnitID" class="form-control" asp-items="Model.Units">
+                                </select>
+                            </td>
+                            <td>
+                                <input type="hidden" asp-for="PriceDetails[i].PriceDetailID" class="form-control" />
+                                <input type="hidden" asp-for="PriceDetails[i].PriceID" class="form-control" />
                                 <input type="number" asp-for="PriceDetails[i].VAT" class="form-control" />
                             </td>
                             <td>
@@ -92,18 +98,32 @@
     <script type="application/json" id="productData">
         @Html.Raw(Json.Serialize(Model.Products))
     </script>
+    <script type="application/json" id="unitData">
+        @Html.Raw(Json.Serialize(Model.Units))
+    </script>
     <script>
         // Function to add a new row for Price Details
         function addPriceDetailRow() {
             var rowCount = document.getElementById('priceDetailRows').rows.length;
+
             var productData = JSON.parse(document.getElementById('productData').textContent);
+
+            var unitData = JSON.parse(document.getElementById('unitData').textContent);
+
             var productOptions = productData.map(p => `<option value="${p.Value}">${p.Text}</option>`).join('');
+
+            var unitOptions = unitData.map(u => `<option value="${u.Value}">${u.Text}</option>`).join('');
 
             var newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
                     <select name="PriceDetails[${rowCount}].ProductID" class="form-control">
                         ${productOptions}
+                    </select>
+                </td>
+                <td>
+                    <select name="PriceDetails[${rowCount}].UnitID" class="form-control">
+                        ${unitOptions}
                     </select>
                 </td>
                 <td>
@@ -128,7 +148,7 @@
             // Update the names of all remaining rows
             var rows = document.querySelectorAll("#priceDetailRows tr");
             rows.forEach((row, index) => {
-                row.querySelectorAll("input, select").forEach(input => {
+                row.querySelectorAll("input").forEach(input => {
                     var name = input.getAttribute("name");
                     if (name) {
                         // Update the name attribute to the new index
