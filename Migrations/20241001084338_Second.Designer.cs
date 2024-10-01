@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    [Migration("20240930015345_UpdateGUIDCredit")]
-    partial class UpdateGUIDCredit
+    [Migration("20241001084338_Second")]
+    partial class Second
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
 
             modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.CreditLimit", b =>
                 {
-                    b.Property<Guid>("CreditLimitID")
+                    b.Property<Guid?>("CreditLimitID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -307,10 +307,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
 
                     b.HasIndex("PriceID");
 
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("UnitID");
-
                     b.ToTable("PriceDetails");
                 });
 
@@ -463,23 +459,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", "Product")
-                        .WithMany("PriceDetails")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Unit", "Unit")
-                        .WithMany()
-                        .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Price");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", b =>
@@ -528,11 +508,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 });
 
             modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.Price", b =>
-                {
-                    b.Navigation("PriceDetails");
-                });
-
-            modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", b =>
                 {
                     b.Navigation("PriceDetails");
                 });

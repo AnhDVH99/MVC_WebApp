@@ -2,6 +2,7 @@
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
+using OfficeOpenXml;
 
 namespace ASP.NET_Core_MVC_Piacom.Repositories
 {
@@ -34,6 +35,52 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             return null;
         }
 
+        public async Task<byte[]> ExportCustomersToExcelAsync()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var customers = await piacomDbContext.Customers.ToListAsync();
+            var employees = await piacomDbContext.Employees.ToListAsync();
+
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Customers");
+                worksheet.Cells["A1"].Value = "Customer ID";
+                worksheet.Cells["B1"].Value = "Customer Name";
+                worksheet.Cells["C1"].Value = "Phone";
+                worksheet.Cells["D1"].Value = "Address";
+                worksheet.Cells["E1"].Value = "City";
+                worksheet.Cells["F1"].Value = "State";
+                worksheet.Cells["G1"].Value = "Postal Code";
+                worksheet.Cells["H1"].Value = "Country";
+                worksheet.Cells["I1"].Value = "SaleRepID";
+                worksheet.Cells["J1"].Value = "Sale Representative";
+
+                int row = 2;
+                foreach (var customer in customers)
+                {
+                    worksheet.Cells[row, 1].Value = customer.CustomerID;
+                    worksheet.Cells[row, 2].Value = customer.CustomerName;
+                    worksheet.Cells[row, 3].Value = customer.Phone;
+                    worksheet.Cells[row, 4].Value = customer.AddressLine1 + " " + customer.AddressLine2;
+                    worksheet.Cells[row, 5].Value = customer.City;
+                    worksheet.Cells[row, 6].Value = customer.State;
+                    worksheet.Cells[row, 7].Value = customer.PostalCode;
+                    worksheet.Cells[row, 8].Value = customer.Country;
+                    worksheet.Cells[row, 9].Value = customer.SaleRepEmployeeID;
+                    var saleRepEmployee = employees.FirstOrDefault(e => e.EmployeeID == customer.SaleRepEmployeeID);
+                    worksheet.Cells[row, 10].Value = saleRepEmployee != null
+                        ? $"{saleRepEmployee.FirstName} {saleRepEmployee.LastName}"
+                        : "N/A"; // Default value if no employee is assigned
+
+                    row++;
+                }
+
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                return package.GetAsByteArray();
+            }
+
+        }
         public async Task<IEnumerable<Customer>> GetAllAsync()
         {
             return await piacomDbContext.Customers.ToListAsync();
@@ -50,6 +97,45 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             .Include(c => c.CreditLimits) // Include related CreditLimits
             .FirstOrDefaultAsync(c => c.CustomerID == id); // Query by CustomerID
         }
+
+        public async Task ImportCustomersFromExcelAsync(Stream fileStream)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage(fileStream))
+            {
+                var worksheet = package.Workbook.Worksheets[0]; // Assuming first worksheet
+                var rowCount = worksheet.Dimension.Rows;
+
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    var customerName = worksheet.Cells[row, 2].Value?.ToString();
+                    var phone = worksheet.Cells[row, 3].Value?.ToString();
+                    var address = worksheet.Cells[row, 4].Value?.ToString();
+                    var city = worksheet.Cells[row, 5].Value?.ToString();
+                    var state = worksheet.Cells[row, 6].Value?.ToString();
+                    var postalCode = worksheet.Cells[row, 7].Value?.ToString();
+                    var country = worksheet.Cells[row, 8].Value?.ToString();
+                    var saleRepEmployeeID = Guid.Parse(worksheet.Cells[row, 9].Value?.ToString());
+
+                    var customer = new Customer
+                    {
+                        CustomerName = customerName,
+                        Phone = phone,
+                        AddressLine1 = address,  // If address is split across columns, adjust here
+                        City = city,
+                        State = state,
+                        PostalCode = postalCode,
+                        Country = country,
+                        SaleRepEmployeeID = saleRepEmployeeID
+                    };
+
+                    piacomDbContext.Customers.Add(customer); // Add customer to the database
+                }
+
+                await piacomDbContext.SaveChangesAsync();
+            }
+        }
+
 
         public async Task<Customer?> UpdateAsync(Customer customer)
         {

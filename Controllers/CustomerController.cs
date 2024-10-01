@@ -28,7 +28,6 @@ public class CustomerController : Controller
     public async Task<IActionResult> Add()
     {
         var employees = await employeeRepository.GetAllAsync();
-        var creditLimits = await creditRepository.GetAllAsync();
         var model = new AddCustomerRequest
         {
             Employees = employees.Select(e => new SelectListItem
@@ -192,5 +191,34 @@ public class CustomerController : Controller
         //show error notification
 
         return RedirectToAction("Edit", new { id = editCustomerRequest.CustomerID });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExportToExcel()
+    {
+        var fileBytes = await customerRepository.ExportCustomersToExcelAsync();
+        return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Customers.xlsx");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ImportFromExcel(IFormFile file)
+    {
+
+        if (!file.FileName.EndsWith(".xlsx"))
+        {
+            ModelState.AddModelError("File", "The file format is invalid. Please upload an XLSX file.");
+            return RedirectToAction("List");
+        }
+        if (file == null || file.Length <= 0)
+        {
+            ModelState.AddModelError("File", "The file is empty.");
+            return RedirectToAction("List");
+        }
+        using (var stream = file.OpenReadStream())
+        {
+            await customerRepository.ImportCustomersFromExcelAsync(stream);
+        }
+
+        return RedirectToAction("List");
     }
 }

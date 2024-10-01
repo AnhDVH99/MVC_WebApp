@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,7 +70,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                     PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SaleRepEmployeeID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreditLimitID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployeeID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -133,7 +132,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                     OrderID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequiredDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShippedDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippedDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -214,7 +213,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                     ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProductStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SysU = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SysD = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -255,12 +254,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         column: x => x.ProductID,
                         principalTable: "Products",
                         principalColumn: "ProductID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PriceDetails_Units_UnitID",
-                        column: x => x.UnitID,
-                        principalTable: "Units",
-                        principalColumn: "UnitID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -303,11 +296,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 name: "IX_PriceDetails_ProductID",
                 table: "PriceDetails",
                 column: "ProductID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PriceDetails_UnitID",
-                table: "PriceDetails",
-                column: "UnitID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_OrderDetailID",

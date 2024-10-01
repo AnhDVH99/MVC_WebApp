@@ -15,5 +15,8 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
         Task<Customer?> DeleteAsync(Guid id);
 
         Task<Customer?> GetByIdAsync(Guid id);
+
+        Task<byte[]> ExportCustomersToExcelAsync();
+        Task ImportCustomersFromExcelAsync(Stream fileStream);
     }
 }
