@@ -29,7 +29,7 @@ public class EditCustomerRequest
     [Required]
     public Guid SaleRepEmployeeID { get; set; }
 
-    public List<CreditLimit>? CreditLimits { get; set; }
+    public List<CreditLimit>? CreditLimits { get; set; } 
     public IEnumerable<SelectListItem>? Employees { get; set; }
 
 }

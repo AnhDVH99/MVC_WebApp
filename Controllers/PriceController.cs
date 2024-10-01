@@ -1,4 +1,5 @@
-﻿using ASP.NET_Core_MVC_Piacom.Models.Domain;
+﻿using ASP.NET_Core_MVC_Piacom.Data;
+using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using ASP.NET_Core_MVC_Piacom.Models.ViewModels;
 using ASP.NET_Core_MVC_Piacom.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -16,13 +17,16 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         private readonly IPriceDetailRepository priceDetailRepository;
         private readonly IProductRepository productRepository;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IUnitRepository unitRepository;
 
-        public PriceController(IPriceRepository priceRepository, IPriceDetailRepository priceDetailRepository, IProductRepository productRepository, UserManager<IdentityUser> userManager )
+        public PriceController(IPriceRepository priceRepository, IPriceDetailRepository priceDetailRepository,
+            IProductRepository productRepository, UserManager<IdentityUser> userManager, IUnitRepository unitRepository )
         {
             this.priceRepository = priceRepository;
             this.priceDetailRepository = priceDetailRepository;
             this.productRepository = productRepository;
             this.userManager = userManager;
+            this.unitRepository = unitRepository;
         }
 
         [HttpGet]
@@ -63,11 +67,17 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
 
             var price = await priceRepository.GetAsync(id);
             var productList = await productRepository.GetAllAsync();
+            var unitList = await unitRepository.GetAllAsync();
             var products = productList.Select(p => new SelectListItem
             {
                 Value = p.ProductID.ToString(),
                 Text = p.ProductName
             }).ToList();
+            var units = unitList.Select(u => new SelectListItem
+            {
+                Value = u.UnitID.ToString(),
+                Text = u.UnitName
+            });
             if (price == null)
             {
                 return NotFound();
@@ -82,7 +92,9 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 SysU = price.SysU,
                 SysD = DateTime.Now,
                 PriceDetails = price.PriceDetails.ToList(),
-                Products = products // Populate products here
+                Products = products,
+                Units = units
+
             };
 
             return View(editPriceRequest);

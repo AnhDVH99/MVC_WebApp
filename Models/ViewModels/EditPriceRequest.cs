@@ -19,6 +19,8 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
 
         public List<PriceDetail> PriceDetails { get; set; }
 
-        public List<SelectListItem>? Products { get; set; }
+        public IEnumerable<SelectListItem>? Units { get; set; }
+        public IEnumerable<SelectListItem>? Products { get; set; }
+
     }
 }

@@ -5,7 +5,7 @@ namespace ASP.NET_Core_MVC_Piacom.Models.Domain;
 
 public class CreditLimit
 {
-    public Guid CreditLimitID { get; set; }
+    public Guid CreditLimitID { get; set; } 
 
     [Required]
     [ForeignKey("Customer")]

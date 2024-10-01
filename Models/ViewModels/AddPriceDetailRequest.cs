@@ -19,11 +19,11 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
 
         public Guid UnitID { get; set; }
 
-        public Unit Unit { get; set; }
+        public Unit? Unit { get; set; }
 
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
 
-        public Price Price { get; set; }
+        public Price? Price { get; set; }
 
         public IEnumerable<SelectListItem> Products { get; set; }
         public IEnumerable<SelectListItem> Units { get; set; }
