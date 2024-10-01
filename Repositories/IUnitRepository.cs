@@ -6,13 +6,5 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
     {
         Task<IEnumerable<Unit>> GetAllAsync();
 
-        Task<Unit?> GetAsync(Guid id);
-
-        Task<Unit> AddAsync(Unit unit);
-
-        Task<Unit?> UpdateAsync(Unit unit);
-
-        Task<Unit?> DeleteAsync(Guid id);
-
     }
 }

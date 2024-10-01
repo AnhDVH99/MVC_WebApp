@@ -105,7 +105,6 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                 var creditLimitsToRemove = existingCustomer.CreditLimits
               .Where(existingCL => !customer.CreditLimits
                   .Any(updatedCL => updatedCL.CreditLimitID == existingCL.CreditLimitID))
-              .Take(updatedCreditLimits.Count)  // Limit by the length of updatedCreditLimits
               .ToList();
                 if (creditLimitsToRemove.Count > 0)
                 {

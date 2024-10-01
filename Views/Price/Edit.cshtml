@@ -109,11 +109,11 @@
             var productData = JSON.parse(document.getElementById('productData').textContent);
 
             var unitData = JSON.parse(document.getElementById('unitData').textContent);
-            console.log(unitData);
+
             var productOptions = productData.map(p => `<option value="${p.value}">${p.text}</option>`).join('');
 
             var unitOptions = unitData.map((u) => `<option value=\"${u.value}\">${u.text}</option>`).join('');
-            console.log(unitOptions);
+
             var newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
