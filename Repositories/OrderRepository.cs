@@ -9,7 +9,7 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
     {
         private readonly PiacomDbContext piacomDbContext;
 
-        public OrderRepository(PiacomDbContext piacomDbContext) 
+        public OrderRepository(PiacomDbContext piacomDbContext)
         {
             this.piacomDbContext = piacomDbContext;
         }
@@ -45,6 +45,18 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             return piacomDbContext.Orders.Include(od => od.OrderDetails).FirstOrDefaultAsync(x => x.OrderID == id);
 
         }
+        public async Task<(float VAT, float EnvironmentTax)?> GetProductTaxesAsync(Guid productId)
+        {
+            var priceDetail = await piacomDbContext.PriceDetails
+                .FirstOrDefaultAsync(pd => pd.ProductID == productId);
+
+            if (priceDetail == null)
+            {
+                return null;
+            }
+
+            return (priceDetail.VAT, priceDetail.EnvirontmentTax);
+        }
 
         public async Task<Order?> UpdateAsync(Order order)
         {
@@ -73,14 +85,24 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                 if (lstNotExistOrderDetail.Count > 0)
                     existingOrder.OrderDetails.AddRange(lstNotExistOrderDetail);
 
+
                 if (newOrderDetails.Count > 0)
                 {
                     foreach (var newOrderDetail in newOrderDetails)
                     {
                         newOrderDetail.OrderID = order.OrderID;
+                        var priceDetail = await piacomDbContext.PriceDetails
+                            .FirstOrDefaultAsync(pd => pd.ProductID == newOrderDetail.ProductID);
+                        if (priceDetail != null)
+                        {
+                            newOrderDetail.VAT = priceDetail.VAT;
+                            newOrderDetail.EnvironmentTax = priceDetail.EnvirontmentTax;
+                        }
                     }
                 }
                 existingOrder.OrderDetails.AddRange(newOrderDetails);
+
+
                 if (existingOrderDetailsToUpdate.Count > 0)
                 {
                     foreach (var existingOrderDetails in existingOrderDetailsToUpdate)
@@ -90,11 +112,25 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
 
                         if (dbOrderDetail != null)
                         {
+                            dbOrderDetail.UnitID = existingOrderDetails.UnitID;
+                            dbOrderDetail.ProductID = existingOrderDetails.ProductID;
                             dbOrderDetail.Quantity = existingOrderDetails.Quantity;
                             dbOrderDetail.Price = existingOrderDetails.Price;
                             dbOrderDetail.Discount = existingOrderDetails.Discount;
                             dbOrderDetail.TotalAmount = existingOrderDetails.TotalAmount;
                             dbOrderDetail.DueDate = existingOrderDetails.DueDate;
+                            dbOrderDetail.priceAfterTax = existingOrderDetails.priceAfterTax;
+                            dbOrderDetail.priceBeforeTax = existingOrderDetails.priceBeforeTax;
+                            
+
+                            var priceDetail = await piacomDbContext.PriceDetails
+                       .FirstOrDefaultAsync(pd => pd.ProductID == existingOrderDetails.ProductID);
+
+                            if (priceDetail != null)
+                            {
+                                dbOrderDetail.VAT = priceDetail.VAT;
+                                dbOrderDetail.EnvironmentTax = priceDetail.EnvirontmentTax;
+                            }
                         }
                     }
                 }

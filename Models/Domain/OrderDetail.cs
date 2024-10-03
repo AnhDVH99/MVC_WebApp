@@ -21,6 +21,13 @@ public class OrderDetail
 
     public int Discount { get; set; }
 
+    public float priceBeforeTax { get; set; }
+
+    public float priceAfterTax { get; set; }
+
+    public float VAT { get; set; }
+    public float EnvironmentTax { get; set; }
+
     public decimal TotalAmount { get; set; }
 
     public DateTime DueDate { get; set; }

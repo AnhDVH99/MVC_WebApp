@@ -22,14 +22,19 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         private readonly ICustomerRepository customerRepository;
         private readonly IEmployeeRepository employeeRepository;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IUnitRepository unitRepository;
+        private readonly IProductRepository productRepository;
 
         public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository,
-            IEmployeeRepository employeeRepository, UserManager<IdentityUser> userManager)
+            IEmployeeRepository employeeRepository, UserManager<IdentityUser> userManager,
+            IUnitRepository unitRepository, IProductRepository productRepository)
         {
             this.orderRepository = orderRepository;
             this.customerRepository = customerRepository;
             this.employeeRepository = employeeRepository;
             this.userManager = userManager;
+            this.unitRepository = unitRepository;
+            this.productRepository = productRepository;
         }
 
         // GET: Orders
@@ -90,6 +95,19 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
+            var productList = await productRepository.GetAllAsync();
+            var products = productList.Select(p => new SelectListItem
+            {
+                Value = p.ProductID.ToString(),
+                Text = p.ProductName,
+                
+            }).ToList();
+            var unitList = await unitRepository.GetAllAsync();
+            var units = unitList.Select(u => new SelectListItem
+            {
+                Value = u.UnitID.ToString(),
+                Text = u.UnitName
+            }).ToList();
             var currentUser = userManager.GetUserAsync(User);
             var employees = await employeeRepository.GetAllAsync();
             var customers = await customerRepository.GetAllAsync();
@@ -120,8 +138,11 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                         Value = x.CustomerID.ToString(),
                         Selected = (x.CustomerID == order.CustomerID)
                     }),
-                    OrderDetails = order.OrderDetails.ToList()
+                    OrderDetails = order.OrderDetails.ToList(),
+                    Products = products,
+                    Units = units
                 };
+
                 return View(editOrderRequest);
             }
             return NoContent();
@@ -174,6 +195,23 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             //show error notification
 
             return RedirectToAction("Edit", new { id = editOrderRequest.OrderID });
+        }
+
+        public async Task<IActionResult> GetProductTaxes(Guid productId)
+        {
+            var taxes = await orderRepository.GetProductTaxesAsync(productId);
+
+            if (taxes == null)
+            {
+                return NotFound();
+            }
+
+            // Return VAT and EnvironmentTax as JSON
+            return Json(new
+            {
+                vat = taxes.Value.VAT,
+                environmentTax = taxes.Value.EnvironmentTax
+            });
         }
     }
 }
