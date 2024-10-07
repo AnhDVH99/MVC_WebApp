@@ -53,6 +53,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddCustomerRequestValidator
 builder.Services.AddValidatorsFromAssemblyContaining<AccountValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<EditCustomerRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UnitValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<OrderDetailValidator>();
 
 
 var app = builder.Build();

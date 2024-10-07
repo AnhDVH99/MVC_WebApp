@@ -4,6 +4,7 @@ using ASP.NET_Core_MVC_Piacom.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
@@ -33,7 +34,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         public async Task<IActionResult> Add(AddProductRequest addProductRequest)
         {
             var currentUser = await userManager.GetUserAsync(User);
-            var priceDetails = await priceDetailRepository.GetAllAsync();
             var product = new Product
             {
                 
@@ -41,13 +41,30 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 ProductDescription = addProductRequest.ProductDescription,
                 ProductName = addProductRequest.ProductName,
                 ProductStatus = addProductRequest.ProductStatus,
-                PriceDetails = addProductRequest.PriceDetails,
                 SysU = currentUser?.UserName,
                 SysD = DateTime.Now
             };
             await productRepository.AddAsync(product);
 
             return RedirectToAction("List");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductDetails(Guid productId)
+        {
+            var priceDetail = await priceDetailRepository.GetAsync(productId);
+
+            if (priceDetail == null)
+            {
+                return NotFound();
+            }
+
+            // Return VAT and environment tax as JSON
+            return Json(new
+            {
+                VAT = priceDetail.VAT,
+                EnvironmentTax = priceDetail.EnvirontmentTax
+            });
         }
 
         [HttpGet]
@@ -69,7 +86,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             {
                 return NotFound();
             }
-            var products = await productRepository.GetAllAsync();
             var editProductRequest = new EditProductRequest
             {
                 ProductID = product.ProductID,
@@ -77,7 +93,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 ProductDescription = product.ProductDescription,
                 ProductName = product.ProductName,
                 ProductStatus = product.ProductStatus,
-                PriceDetails = product.PriceDetails.ToList(),
                 SysU = product.SysU,
             };
 
@@ -98,14 +113,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 ProductStatus = editProductRequest.ProductStatus,
                 SysU = currentUser?.UserName,
                 SysD = DateTime.Now,
-                PriceDetails = editProductRequest.PriceDetails != null
-                       ? editProductRequest.PriceDetails.ToList()
-                       : new List<PriceDetail>()
             };
-            var updatedPriceDetails = editProductRequest.PriceDetails;
-            var existingPriceDetails = product.PriceDetails.ToList();
-
-
 
             var updatedProduct = await productRepository.UpdateAsync(product);
             if (updatedProduct != null)

@@ -4,6 +4,7 @@ using ASP.NET_Core_MVC_Piacom.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    partial class PiacomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241002043240_UpdateOrderDetailModel")]
+    partial class UpdateOrderDetailModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,6 +185,12 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<float>("EnvironmentTax")
                         .HasColumnType("real");
 
@@ -294,12 +303,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                     b.Property<float>("EnvirontmentTax")
                         .HasColumnType("real");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
-
-                    b.Property<float>("PriceBeforeTax")
-                        .HasColumnType("real");
-
                     b.Property<Guid>("PriceID")
                         .HasColumnType("uniqueidentifier");
 
@@ -309,16 +312,12 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                     b.Property<Guid>("UnitID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float>("VAT")
-                        .HasColumnType("real");
+                    b.Property<int>("VAT")
+                        .HasColumnType("int");
 
                     b.HasKey("PriceDetailID");
 
                     b.HasIndex("PriceID");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("UnitID");
 
                     b.ToTable("PriceDetails");
                 });
@@ -466,29 +465,13 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
 
             modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.PriceDetail", b =>
                 {
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Price", "PriceNav")
+                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Price", "Price")
                         .WithMany("PriceDetails")
                         .HasForeignKey("PriceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Unit", "Unit")
-                        .WithMany()
-                        .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PriceNav");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Unit");
+                    b.Navigation("Price");
                 });
 
             modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", b =>

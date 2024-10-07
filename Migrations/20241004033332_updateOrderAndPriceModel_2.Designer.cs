@@ -4,6 +4,7 @@ using ASP.NET_Core_MVC_Piacom.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    partial class PiacomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241004033332_updateOrderAndPriceModel_2")]
+    partial class updateOrderAndPriceModel_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -466,7 +469,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
 
             modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.PriceDetail", b =>
                 {
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Price", "PriceNav")
+                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Price", null)
                         .WithMany("PriceDetails")
                         .HasForeignKey("PriceID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -483,8 +486,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                         .HasForeignKey("UnitID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("PriceNav");
 
                     b.Navigation("Product");
 

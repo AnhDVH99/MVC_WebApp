@@ -148,7 +148,17 @@
             // Update the names of all remaining rows
             var rows = document.querySelectorAll("#priceDetailRows tr");
             rows.forEach((row, index) => {
-                row.querySelectorAll("input","select").forEach(input => {
+                 row.querySelectorAll("select").forEach(input => {
+                    var name = input.getAttribute("name");
+                    if (name) {
+                        // Update the name attribute to the new index
+                        var newName = name.replace(/\[\d+\]/, "[" + index + "]");
+                        input.setAttribute("name", newName);
+                    }
+
+                });
+
+                row.querySelectorAll("input").forEach(input => {
                     var name = input.getAttribute("name");
                     if (name) {
                         // Update the name attribute to the new index

@@ -151,6 +151,60 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditOrderRequest editOrderRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                //foreach (var state in ModelState)
+                //{
+                //    foreach (var error in state.Value.Errors)
+                //    {
+                //        // Print to console (or use Debug.WriteLine if you prefer)
+                //        Console.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
+                //    }
+                //}
+
+                var productList = await productRepository.GetAllAsync();
+                var products = productList.Select(p => new SelectListItem
+                {
+                    Value = p.ProductID.ToString(),
+                    Text = p.ProductName
+                }).ToList();
+
+                var unitList = await unitRepository.GetAllAsync();
+                var units = unitList.Select(u => new SelectListItem
+                {
+                    Value = u.UnitID.ToString(),
+                    Text = u.UnitName
+                }).ToList();
+
+                var employees = await employeeRepository.GetAllAsync();
+                var customers = await customerRepository.GetAllAsync();
+
+                // Populate the existing order details
+                var orders = await orderRepository.GetAsync(editOrderRequest.OrderID);
+                if (orders != null)
+                {
+                    // Repopulate editOrderRequest with current values and lists
+                    editOrderRequest.Employees = employees.Select(e => new SelectListItem
+                    {
+                        Text = e.FirstName,
+                        Value = e.EmployeeID.ToString()
+                    });
+
+                    editOrderRequest.Customers = customers.Select(x => new SelectListItem
+                    {
+                        Text = x.CustomerName,
+                        Value = x.CustomerID.ToString(),
+                        Selected = (x.CustomerID == orders.CustomerID)
+                    });
+
+                    editOrderRequest.Products = products;
+                    editOrderRequest.Units = units;
+                   
+                }
+
+                // Return the view with the model including validation errors
+                return View(editOrderRequest);
+            }
             var currentUser = await userManager.GetUserAsync(User);
             var order = new Order
             {
@@ -197,10 +251,12 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             return RedirectToAction("Edit", new { id = editOrderRequest.OrderID });
         }
 
+
+        [HttpGet]
         public async Task<IActionResult> GetProductTaxes(Guid productId)
         {
             var taxes = await orderRepository.GetProductTaxesAsync(productId);
-
+            Console.WriteLine(productId);
             if (taxes == null)
             {
                 return NotFound();
@@ -210,8 +266,12 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             return Json(new
             {
                 vat = taxes.Value.VAT,
-                environmentTax = taxes.Value.EnvironmentTax
+                environmentTax = taxes.Value.EnvironmentTax,
+                price = taxes.Value.Price,
+                priceBeforeTax = taxes.Value.PriceBeforeTax,
             });
+
+            
         }
     }
 }

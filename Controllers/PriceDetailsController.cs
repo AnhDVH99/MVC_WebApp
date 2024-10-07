@@ -7,12 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASP.NET_Core_MVC_Piacom.Data;
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
-    [Authorize(Roles = "Admin")]
-
     public class PriceDetailsController : Controller
     {
         private readonly PiacomDbContext _context;
@@ -25,7 +22,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         // GET: PriceDetails
         public async Task<IActionResult> Index()
         {
-            var piacomDbContext = _context.PriceDetails.Include(p => p.Price).Include(p => p.Product).Include(p => p.Unit);
+            var piacomDbContext = _context.PriceDetails.Include(p => p.PriceNav).Include(p => p.Product).Include(p => p.Unit);
             return View(await piacomDbContext.ToListAsync());
         }
 
@@ -38,7 +35,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             }
 
             var priceDetail = await _context.PriceDetails
-                .Include(p => p.Price)
+                .Include(p => p.PriceNav)
                 .Include(p => p.Product)
                 .Include(p => p.Unit)
                 .FirstOrDefaultAsync(m => m.PriceDetailID == id);
@@ -53,9 +50,9 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         // GET: PriceDetails/Create
         public IActionResult Create()
         {
-            ViewBag.PriceID = new SelectList(_context.Prices, "PriceID", "PriceCode");
-            ViewBag.ProductID = new SelectList(_context.Products, "ProductID", "ProductName");
-            ViewBag.UnitID = new SelectList(_context.Units, "UnitID", "UnitName");
+            ViewData["PriceID"] = new SelectList(_context.Prices, "PriceID", "PriceCode");
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName");
+            ViewData["UnitID"] = new SelectList(_context.Units, "UnitID", "UnitName");
             return View();
         }
 
@@ -64,7 +61,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PriceDetailID,ProductID,PriceID,VAT,EnvirontmentTax,UnitID")] PriceDetail priceDetail)
+        public async Task<IActionResult> Create([Bind("PriceDetailID,ProductID,PriceID,PriceBeforeTax,VAT,EnvirontmentTax,Price,UnitID")] PriceDetail priceDetail)
         {
             if (ModelState.IsValid)
             {
@@ -73,15 +70,9 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            var errors = ModelState.Values.SelectMany(v => v.Errors);
-            foreach (var error in errors)
-            {
-                Console.WriteLine(error.ErrorMessage);  // Or use logging framework
-            }
-
-            ViewBag.PriceID = new SelectList(_context.Prices, "PriceID", "PriceCode", priceDetail.PriceID);
-            ViewBag.ProductID = new SelectList(_context.Products, "ProductID", "ProductName", priceDetail.ProductID);
-            ViewBag.UnitID = new SelectList(_context.Units, "UnitID", "UnitName", priceDetail.UnitID);
+            ViewData["PriceID"] = new SelectList(_context.Prices, "PriceID", "PriceCode", priceDetail.PriceID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", priceDetail.ProductID);
+            ViewData["UnitID"] = new SelectList(_context.Units, "UnitID", "UnitName", priceDetail.UnitID);
             return View(priceDetail);
         }
 
@@ -98,9 +89,9 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             {
                 return NotFound();
             }
-            ViewBag.PriceID = new SelectList(_context.Prices, "PriceID", "PriceCode", priceDetail.PriceID);
-            ViewBag.ProductID = new SelectList(_context.Products, "ProductID", "ProductName", priceDetail.ProductID);
-            ViewBag.UnitID = new SelectList(_context.Units, "UnitID", "UnitName", priceDetail.UnitID);
+            ViewData["PriceID"] = new SelectList(_context.Prices, "PriceID", "PriceCode", priceDetail.PriceID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", priceDetail.ProductID);
+            ViewData["UnitID"] = new SelectList(_context.Units, "UnitID", "UnitName", priceDetail.UnitID);
             return View(priceDetail);
         }
 
@@ -109,7 +100,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("PriceDetailID,ProductID,PriceID,VAT,EnvirontmentTax,UnitID")] PriceDetail priceDetail)
+        public async Task<IActionResult> Edit(Guid id, [Bind("PriceDetailID,ProductID,PriceID,PriceBeforeTax,VAT,EnvirontmentTax,Price,UnitID")] PriceDetail priceDetail)
         {
             if (id != priceDetail.PriceDetailID)
             {
@@ -136,9 +127,9 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.PriceID = new SelectList(_context.Prices, "PriceID", "PriceCode", priceDetail.PriceID);
-            ViewBag.ProductID = new SelectList(_context.Products, "ProductID", "ProductName", priceDetail.ProductID);
-            ViewBag.UnitID = new SelectList(_context.Units, "UnitID", "UnitName", priceDetail.UnitID);
+            ViewData["PriceID"] = new SelectList(_context.Prices, "PriceID", "PriceCode", priceDetail.PriceID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", priceDetail.ProductID);
+            ViewData["UnitID"] = new SelectList(_context.Units, "UnitID", "UnitName", priceDetail.UnitID);
             return View(priceDetail);
         }
 
@@ -151,7 +142,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             }
 
             var priceDetail = await _context.PriceDetails
-                .Include(p => p.Price)
+                .Include(p => p.PriceNav)
                 .Include(p => p.Product)
                 .Include(p => p.Unit)
                 .FirstOrDefaultAsync(m => m.PriceDetailID == id);

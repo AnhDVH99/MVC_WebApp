@@ -11,6 +11,12 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PriceBeforeTax)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PriceBeforeTax)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.VAT)
         </dt>
         <dd class = "col-sm-10">
@@ -23,22 +29,28 @@
             @Html.DisplayFor(model => model.EnvirontmentTax)
         </dd>
         <dt class = "col-sm-2">
-            Unit Name
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Unit.UnitName)
-        </dd>
-        <dt class = "col-sm-2">
-            Product Name
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.ProductName)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price.PriceCode)
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Product)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Product.ProductID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Unit)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Unit.UnitCode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PriceNav)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PriceNav.PriceID)
         </dd>
     </dl>
 </div>

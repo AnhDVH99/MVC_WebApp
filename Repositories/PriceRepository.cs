@@ -49,9 +49,6 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             var existingPrice = await piacomDbContext.Prices
                 .Include(c => c.PriceDetails)
                 .FirstOrDefaultAsync(c => c.PriceID == price.PriceID);
-            var existingProduct = await piacomDbContext.Products
-                .AnyAsync(p => p.ProductID == price.PriceID);
-                
             if (existingPrice != null)
             {
                 //Update customer entity
@@ -78,10 +75,7 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                     foreach (var newPriceDetail in newPriceDetails)
                     {
                         newPriceDetail.PriceID = price.PriceID;
-                        if (!await piacomDbContext.Products.AnyAsync(p => p.ProductID == newPriceDetail.ProductID))
-                        {
-                            throw new InvalidOperationException($"ProductID {newPriceDetail.ProductID} does not exist.");
-                        }
+                        newPriceDetail.ProductID = newPriceDetail.ProductID;
                         newPriceDetail.UnitID = newPriceDetail.UnitID;
                     }
                     existingPrice.PriceDetails.AddRange(newPriceDetails);
@@ -93,12 +87,12 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                     foreach (var existingPriceDetails in existingPriceDetailsToUpdate)
                     {
                         var dbPriceDetail = existingPrice.PriceDetails
-                            .FirstOrDefault(pd => pd.PriceID == existingPriceDetails.PriceID);
+                            .FirstOrDefault(pd => pd.PriceDetailID == existingPriceDetails.PriceDetailID);
 
                         if (dbPriceDetail != null)
-                        {
-                            dbPriceDetail.UnitID = existingPriceDetails.UnitID;
+                        {  
                             dbPriceDetail.ProductID = existingPriceDetails.ProductID;
+                            dbPriceDetail.UnitID = existingPriceDetails.UnitID;
                             dbPriceDetail.VAT = existingPriceDetails.VAT;
                             dbPriceDetail.EnvirontmentTax = existingPriceDetails.EnvirontmentTax;
                         }

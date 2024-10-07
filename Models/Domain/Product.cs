@@ -4,7 +4,7 @@ namespace ASP.NET_Core_MVC_Piacom.Models.Domain;
 
 public class Product
 {
-    [Required]
+
     public Guid ProductID { get; set; }
     
     public string ProductCode { get; set; }
@@ -18,7 +18,5 @@ public class Product
     public string SysU { get; set; }
     
     public DateTime SysD { get; set; }
-
-    public ICollection<PriceDetail>? PriceDetails { get; set; }
 
 }

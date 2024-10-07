@@ -91,7 +91,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 ToDate = price.ToDate,
                 SysU = price.SysU,
                 SysD = DateTime.Now,
-                PriceDetails = price.PriceDetails.ToList(),
+                PriceDetails = price.PriceDetails?.ToList(),
                 Products = products,
                 Units = units
 
@@ -119,7 +119,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 return RedirectToAction("Edit", new { id = editPriceRequest.PriceID });
             }
             var price = new Price
-            {
+            {   
                 PriceID = editPriceRequest.PriceID,
                 PriceCode = editPriceRequest.PriceCode,
                 FromDate = editPriceRequest.FromDate,

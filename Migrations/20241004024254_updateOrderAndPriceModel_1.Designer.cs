@@ -4,6 +4,7 @@ using ASP.NET_Core_MVC_Piacom.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    partial class PiacomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241004024254_updateOrderAndPriceModel_1")]
+    partial class updateOrderAndPriceModel_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -316,10 +319,6 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
 
                     b.HasIndex("PriceID");
 
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("UnitID");
-
                     b.ToTable("PriceDetails");
                 });
 
@@ -466,29 +465,11 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
 
             modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.PriceDetail", b =>
                 {
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Price", "PriceNav")
+                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Price", null)
                         .WithMany("PriceDetails")
                         .HasForeignKey("PriceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Unit", "Unit")
-                        .WithMany()
-                        .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PriceNav");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", b =>

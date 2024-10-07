@@ -45,7 +45,7 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             return piacomDbContext.Orders.Include(od => od.OrderDetails).FirstOrDefaultAsync(x => x.OrderID == id);
 
         }
-        public async Task<(float VAT, float EnvironmentTax)?> GetProductTaxesAsync(Guid productId)
+        public async Task<(float VAT, float EnvironmentTax, float Price, float PriceBeforeTax)?> GetProductTaxesAsync(Guid productId)
         {
             var priceDetail = await piacomDbContext.PriceDetails
                 .FirstOrDefaultAsync(pd => pd.ProductID == productId);
@@ -55,7 +55,7 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                 return null;
             }
 
-            return (priceDetail.VAT, priceDetail.EnvirontmentTax);
+            return (priceDetail.VAT, priceDetail.EnvirontmentTax, priceDetail.Price, priceDetail.PriceBeforeTax);
         }
 
         public async Task<Order?> UpdateAsync(Order order)
@@ -116,9 +116,7 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                             dbOrderDetail.ProductID = existingOrderDetails.ProductID;
                             dbOrderDetail.Quantity = existingOrderDetails.Quantity;
                             dbOrderDetail.Price = existingOrderDetails.Price;
-                            dbOrderDetail.Discount = existingOrderDetails.Discount;
                             dbOrderDetail.TotalAmount = existingOrderDetails.TotalAmount;
-                            dbOrderDetail.DueDate = existingOrderDetails.DueDate;
                             dbOrderDetail.priceAfterTax = existingOrderDetails.priceAfterTax;
                             dbOrderDetail.priceBeforeTax = existingOrderDetails.priceBeforeTax;
                             

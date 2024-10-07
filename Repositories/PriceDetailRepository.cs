@@ -36,8 +36,6 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
         public async Task<IEnumerable<PriceDetail>> GetAllAsync()
         {
             return await piacomDbContext.PriceDetails
-                .Include(pd => pd.Product)
-                .Include(pd => pd.Unit)
                 .Include(pd => pd.Price)
                 .ToListAsync();
         }
@@ -45,8 +43,6 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
         public Task<PriceDetail?> GetAsync(Guid id)
         {
             return piacomDbContext.PriceDetails
-                .Include(pd => pd.Product)
-                .Include(pd => pd.Unit)
                 .Include(pd => pd.Price)
                 .FirstOrDefaultAsync(pd => pd.PriceDetailID == id);
         }

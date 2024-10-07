@@ -18,7 +18,6 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
 
         public DateTime SysD { get; set; }
 
-        public List<PriceDetail> PriceDetails { get; set; }
 
     }
 }

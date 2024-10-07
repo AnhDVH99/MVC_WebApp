@@ -49,7 +49,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                     return RedirectToAction("Register");
                 }
             }
-            return View();
+            return View(registerViewModel);
         }
 
 
@@ -71,6 +71,20 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 return View(loginViewModel);
             }
 
+            // Now perform the asynchronous validation for username and password
+            var user = await userManager.FindByNameAsync(loginViewModel.Username);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid username or password");
+                return View(loginViewModel);
+            }
+
+            var result = await signInManager.CheckPasswordSignInAsync(user, loginViewModel.Password, false);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid username or password");
+                return View(loginViewModel);
+            }
             var signInResult = await signInManager
                 .PasswordSignInAsync(loginViewModel.Username, loginViewModel.Password, false, false);
 

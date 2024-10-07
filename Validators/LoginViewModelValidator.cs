@@ -21,7 +21,6 @@ namespace ASP.NET_Core_MVC_Piacom.Validators
             RuleFor(u => u.Password)
                 .NotEmpty().WithMessage("Please enter password");
 
-           
         }
     }
 }
