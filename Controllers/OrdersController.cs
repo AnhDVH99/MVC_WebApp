@@ -153,14 +153,14 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //foreach (var state in ModelState)
-                //{
-                //    foreach (var error in state.Value.Errors)
-                //    {
-                //        // Print to console (or use Debug.WriteLine if you prefer)
-                //        Console.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
-                //    }
-                //}
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        // Print to console (or use Debug.WriteLine if you prefer)
+                        Console.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
+                    }
+                }
 
                 var productList = await productRepository.GetAllAsync();
                 var products = productList.Select(p => new SelectListItem
@@ -269,9 +269,31 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 environmentTax = taxes.Value.EnvironmentTax,
                 price = taxes.Value.Price,
                 priceBeforeTax = taxes.Value.PriceBeforeTax,
+                
             });
 
             
+        }
+
+        [Route("Orders/GetProductPriceDetail")]
+        [HttpGet]
+        public async Task<IActionResult> GetProductPriceDetail(Guid productId, DateTime orderDate)
+        {
+            var priceDetail = await orderRepository.GetProductPriceDetailByOrderAsync(productId, orderDate);
+
+            if (priceDetail == null)
+            {
+                return NotFound();
+            }
+
+            // Return relevant price detail information as JSON
+            return Json(new
+            {
+                price = priceDetail.Price,
+                vat = priceDetail.VAT,
+                environmentTax = priceDetail.EnvirontmentTax,
+                priceBeforeTax = priceDetail.PriceBeforeTax, // if you calculate it separately
+            });
         }
     }
 }

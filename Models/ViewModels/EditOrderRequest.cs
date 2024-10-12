@@ -11,13 +11,13 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
         public Guid OrderID { get; set; }
 
         [Required(ErrorMessage ="Please enter order date!")]
-        public string OrderDate { get; set; }
+        public DateTime OrderDate { get; set; }
 
         [Required(ErrorMessage = "Please enter required date!")]
-        public string RequiredDate { get; set; }
+        public DateTime RequiredDate { get; set; }
 
 
-        public string? ShippedDate { get; set; }
+        public DateTime? ShippedDate { get; set; }
 
         public string? OrderStatus { get; set; }
 

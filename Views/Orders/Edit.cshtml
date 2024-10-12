@@ -14,11 +14,10 @@
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" class="form-control" asp-for="OrderID" />
-
         <div class="row mb-3">
             <div class="col-md-4">
                 <label class="form-label">Order Date</label>
-                <input type="date" class="form-control" asp-for="OrderDate" />
+                <input type="date" class="form-control" asp-for="OrderDate" onchange="updateAllOrderDetails(this.value)" />
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
             <div class="col-md-4">
@@ -65,6 +64,7 @@
 
 
 
+
         <div class="container">
             <h1 class="styled-heading">Order Details</h1>
         </div>
@@ -89,28 +89,26 @@
                     @for (int i = 0; i < Model.OrderDetails.Count; i++)
                     {
                         <tr>
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <td>
-                                
-                                <input type="hidden" asp-for="OrderDetails[i].OrderID" class="form-control" />
-                                <input type="number" asp-for="OrderDetails[i].Quantity" class="form-control" oninput="updateTotal(@i)" />
+                                <input type="hidden" asp-for="OrderDetails[i].OrderDetailID" class="form-control" />
+                                <input type="number" asp-for="OrderDetails[i].Quantity" class="form-control" oninput="updateTotal(@i)" required />
                                 <span asp-validation-for="OrderDetails[i].Quantity" class="text-danger"></span>
                             </td>
                             <td>
-                                <select asp-for="OrderDetails[i].ProductID" class="form-control" asp-items="Model.Products" onchange="loadProductDetails(this, @i)">
+                                <select asp-for="OrderDetails[i].ProductID" class="form-control" asp-items="Model.Products" onchange="loadProductDetails(this, @i)" required>
                                 </select>
                             </td>
                             <td>
-                                <select asp-for="OrderDetails[i].UnitID" class="form-control" asp-items="Model.Units" >
+                                <select asp-for="OrderDetails[i].UnitID" class="form-control" asp-items="Model.Units" required >
 
                                 </select>
                             </td>
                             <td>
-                                <input type="number" asp-for="OrderDetails[i].Price" class="form-control" readonly/>
+                                <input type="number" asp-for="OrderDetails[i].Price" class="form-control" readonly required />
                                 <span asp-validation-for="OrderDetails[i].Price" class="text-danger"></span>
                             </td>
                             <td>
-                                <input type="number" asp-for="OrderDetails[i].priceBeforeTax" class="form-control" readonly />
+                                <input type="number" asp-for="OrderDetails[i].priceBeforeTax" class="form-control" readonly required />
                                 <span asp-validation-for="OrderDetails[i].priceBeforeTax" class="text-danger"></span>
                             </td>
                             <td>
@@ -118,10 +116,10 @@
                                 <span asp-validation-for="OrderDetails[i].priceAfterTax" class="text-danger"></span>
                             </td>
                             <td>
-                                <input type="number" asp-for="OrderDetails[i].VAT" class="form-control" readonly />
+                                <input type="number" asp-for="OrderDetails[i].VAT" class="form-control" readonly required />
                             </td>
                             <td>
-                                <input type="number" asp-for="OrderDetails[i].EnvironmentTax" class="form-control" readonly  />
+                                <input type="number" asp-for="OrderDetails[i].EnvironmentTax" class="form-control" readonly required />
                             </td>
                             <td>
                                 <input type="number" asp-for="OrderDetails[i].TotalAmount" class="form-control"/>
@@ -177,8 +175,7 @@
             var newRow = document.createElement('tr');
             newRow.innerHTML = `
                         <td>
-                            <input type="hidden" name="OrderDetails[${rowCount}].OrderID" class="form-control" />
-                                    <input type="number" name="OrderDetails[${rowCount}].Quantity" class="form-control" oninput="updateTotal(${rowCount})"/>
+                            <input type="number" name="OrderDetails[${rowCount}].Quantity" class="form-control" oninput="updateTotal(${rowCount})"/>
                         </td>
                         <td>
                             <select name="OrderDetails[${rowCount}].ProductID" class="form-control" onchange="loadProductDetails(this, ${rowCount})">
@@ -217,6 +214,18 @@
             document.getElementById('orderDetailRows').appendChild(newRow);
             var productSelect = newRow.querySelector(`select[name="OrderDetails[${rowCount}].ProductID"]`);
             loadProductDetails(productSelect, rowCount);
+            updateIndices();
+        }
+
+        function updateIndices() {
+            const orderDetailRows = document.querySelectorAll('#orderDetailRows > tr');
+            orderDetailRows.forEach((row, index) => {
+                const productSelect = row.querySelector('select[name^="OrderDetails["]');
+                if (productSelect) {
+                    productSelect.name = `OrderDetails[${index}].ProductID`;
+                }
+                // Update other input fields similarly...
+            });
         }
 
         // Function to remove a row
@@ -300,14 +309,35 @@
                 priceBeforeTaxInput.value = ''; // Clear the field if input is invalid
             }
         }
-       
-        function loadProductDetails(selectElement, rowIndex) {
+
+
+        function updateAllOrderDetails(orderDate) {
+            var orderDetailRows = document.querySelectorAll('#orderDetailRows tr');
+
+            orderDetailRows.forEach(function (row, rowIndex) {
+                var productSelect = row.querySelector('select[name^="OrderDetails["][name$="].ProductID"]');
+                if (productSelect) {
+                    loadProductDetails(productSelect, rowIndex, orderDate);
+                }
+            });
+        }
+
+        function loadProductDetails(selectElement, rowIndex, orderDate) {
             var productId = selectElement.value;
+            var orderId = '@Model.OrderID';
+            var orderDate = document.querySelector('input[name="OrderDate"]').value;
+
+
+            console.log("Loading product details for Product ID:", productId);
+
+
             var vatInput = document.querySelector(`input[name="OrderDetails[${rowIndex}].VAT"]`);
             var priceInput = document.querySelector(`input[name="OrderDetails[${rowIndex}].Price"]`);
             var environmentTaxInput = document.querySelector(`input[name="OrderDetails[${rowIndex}].EnvironmentTax"]`);
             var priceBeforeTaxInput = document.querySelector(`input[name="OrderDetails[${rowIndex}].priceBeforeTax"]`);
             var priceAfterTaxInput = document.querySelector(`input[name="OrderDetails[${rowIndex}].priceAfterTax"]`)
+            var quantityInput = document.querySelector(`input[name="OrderDetails[${rowIndex}].Quantity"]`);
+            var totalAmountInput = document.querySelector(`input[name="OrderDetails[${rowIndex}].TotalAmount"]`);
 
             var previousProductID = selectElement.dataset.previousProductID || "";
             var previousVat = vatInput ? vatInput.value : null;
@@ -316,11 +346,13 @@
 
             if (productId) {
                 $.ajax({
-                    url: '/Orders/GetProductTaxes',  // Update this with the correct URL
+                    url: '/Orders/GetProductPriceDetail',  // Update this with the correct URL
                     type: 'GET',
-                    data: { productId: productId },
+                    data: { productId: productId, orderDate: orderDate },
+                    cache: false,
                     success: function (data) {
                         // Assuming VAT and EnvironmentTax are displayed in the row
+                        console.log("Price details for product id:", productId, data)
                        
                         if (vatInput) {
                             vatInput.value = data.vat;
@@ -351,19 +383,19 @@
                             totalAmountInput.value = Total.toFixed(2);
                         }
                         
-                        selectElement.dataset.previousProductID = productId;
+                        // selectElement.dataset.previousProductID = productId;
                     },
                     error: function () {
                         alert("Error retrieving tax data.");
 
                          if (vatInput) {
-                                 vatInput.value = previousVat;
+                                 vatInput.value = "";
                          }
 
                          if (environmentTaxInput) {
-                                 environmentTaxInput.value = previousEnvironmentTax;
+                                 environmentTaxInput.value = "";
                          }
-                            selectElement.value = previousProductID;
+                            // selectElement.value = previousProductID;
                     }
                 });
             }

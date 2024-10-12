@@ -24,7 +24,9 @@ public class PriceDetail
     [Required(ErrorMessage = "Required")]
     public Guid UnitID { get; set; }
 
-    public virtual Product? Product { get; set; }  // Navigation property
+
+    // Navigation property
+    public virtual Product? Product { get; set; }  
     public virtual Unit? Unit { get; set; }
 
     public virtual Price? PriceNav { get; set; }

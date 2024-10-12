@@ -48,6 +48,7 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
         public async Task<(float VAT, float EnvironmentTax, float Price, float PriceBeforeTax)?> GetProductTaxesAsync(Guid productId)
         {
             var priceDetail = await piacomDbContext.PriceDetails
+                .Include(pd => pd.PriceNav)
                 .FirstOrDefaultAsync(pd => pd.ProductID == productId);
 
             if (priceDetail == null)
@@ -55,7 +56,28 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                 return null;
             }
 
-            return (priceDetail.VAT, priceDetail.EnvirontmentTax, priceDetail.Price, priceDetail.PriceBeforeTax);
+            return (
+                priceDetail.VAT,
+                priceDetail.EnvirontmentTax,
+                priceDetail.Price,
+                priceDetail.PriceBeforeTax
+                
+                );
+        }
+
+        public async Task<PriceDetail?> GetProductPriceDetailByOrderAsync(Guid productId, DateTime orderDate)
+        {
+
+            // Retrieve the PriceDetail based on product, order date, and Price model's FromDate and ToDate
+            var priceDetail = await piacomDbContext.PriceDetails
+                .Include(pd => pd.PriceNav) // Include Price navigation property
+                .Where(pd => pd.ProductID == productId
+                    && pd.PriceNav.FromDate <= orderDate
+                    && pd.PriceNav.ToDate >= orderDate)  // Ensure that the order date falls between the price's date range
+                .OrderByDescending(pd => pd.PriceNav.FromDate)
+                .FirstOrDefaultAsync();
+
+            return priceDetail;
         }
 
         public async Task<Order?> UpdateAsync(Order order)
@@ -108,7 +130,7 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                     foreach (var existingOrderDetails in existingOrderDetailsToUpdate)
                     {
                         var dbOrderDetail = existingOrder.OrderDetails
-                            .FirstOrDefault(od => od.OrderID == existingOrderDetails.OrderID);
+                            .FirstOrDefault(od => od.OrderDetailID == existingOrderDetails.OrderDetailID);
 
                         if (dbOrderDetail != null)
                         {
@@ -119,16 +141,8 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                             dbOrderDetail.TotalAmount = existingOrderDetails.TotalAmount;
                             dbOrderDetail.priceAfterTax = existingOrderDetails.priceAfterTax;
                             dbOrderDetail.priceBeforeTax = existingOrderDetails.priceBeforeTax;
-                            
-
-                            var priceDetail = await piacomDbContext.PriceDetails
-                       .FirstOrDefaultAsync(pd => pd.ProductID == existingOrderDetails.ProductID);
-
-                            if (priceDetail != null)
-                            {
-                                dbOrderDetail.VAT = priceDetail.VAT;
-                                dbOrderDetail.EnvironmentTax = priceDetail.EnvirontmentTax;
-                            }
+                            dbOrderDetail.VAT = existingOrderDetails.VAT;
+                            dbOrderDetail.EnvironmentTax = existingOrderDetails.EnvironmentTax;
                         }
                     }
                 }

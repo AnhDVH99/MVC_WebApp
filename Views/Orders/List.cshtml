@@ -32,17 +32,17 @@
                         {
                             <tr>
                                 <td>@order.Customer.CustomerName</td>
-                                <td>@order.OrderDate</td>
-                                <td>@order.RequiredDate</td>
+                                <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                                <td>@order.RequiredDate.ToString("yyyy-MM-dd")</td>
                                 <td>
-                                @if (order.ShippedDate == null || order.ShippedDate == string.Empty)
-                                {
-                                    <span class="text-danger">Not Shipped</span>
-                                }
-                                else
-                                {
-                                    @order.ShippedDate
-                                }
+                                    @if (!order.ShippedDate.HasValue)
+                                    {
+                                        <span class="text-danger">Not Shipped</span>
+                                    }
+                                    else
+                                    {
+                                        @order.ShippedDate.Value.ToString("yyyy-MM-dd")
+                                    }
                                 </td>
                                 <td>
                                     <a asp-area="" asp-controller="Orders" asp-action="Edit" asp-route-id="@order.OrderID" class="btn btn-warning btn-sm">

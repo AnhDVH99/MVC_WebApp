@@ -10,12 +10,12 @@ public class Order
     public Guid OrderID { get; set; }
 
     [Required]
-    public string OrderDate { get; set; }
+    public DateTime OrderDate { get; set; }
 
     [Required]
-    public string RequiredDate { get; set; }
+    public DateTime RequiredDate { get; set; }
 
-    public string? ShippedDate { get; set; }
+    public DateTime? ShippedDate { get; set; }
 
     [Required]
     public string OrderStatus { get; set; }
