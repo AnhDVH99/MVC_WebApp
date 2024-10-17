@@ -161,5 +161,28 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             }
             return null;
         }
+
+        public async Task<IEnumerable<Order>> GetOrderByCustomerAndDateRange(Guid cusId, DateTime orderDate)
+        {
+            return await piacomDbContext.Orders.Where(o => o.CustomerID == cusId && o.OrderDate <= orderDate).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Order>> GetAllOrder()
+        {
+            return await piacomDbContext.Orders.Include(o => o.Customer).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Order>> SearchOrdersAsync(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return await GetAllOrder();
+            }
+
+            return await piacomDbContext.Orders
+                .Include(o => o.Customer)
+                .Where(o => o.Customer.CustomerName.Contains(searchTerm))
+                .ToListAsync();
+        }
     }
 }

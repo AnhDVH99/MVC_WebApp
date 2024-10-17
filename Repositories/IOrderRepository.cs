@@ -17,5 +17,11 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
         Task<(float VAT, float EnvironmentTax, float Price, float PriceBeforeTax)?> GetProductTaxesAsync(Guid productId);
 
         Task<PriceDetail?> GetProductPriceDetailByOrderAsync(Guid productID, DateTime orderDate);
+
+        Task<IEnumerable<Order>> GetOrderByCustomerAndDateRange(Guid cusId, DateTime orderDate);
+
+        Task<IEnumerable<Order>> GetAllOrder();
+
+        Task<IEnumerable<Order>> SearchOrdersAsync(string searchTerm);
     }
 }

@@ -1,67 +1,44 @@
 ﻿@model List<ASP.NET_Core_MVC_Piacom.Models.Domain.Order>
 
 
-    <div class="container">
-        <h1 class="mb-4 text-center">Order List</h1>
+<div class="container">
+    <h1 class="mb-4 text-center">Order List</h1>
+
+    <!-- Search Form -->
+    <div class="mb-3">
+        <input type="text" id="searchTerm" class="form-control" placeholder="Search by Customer Name" />
     </div>
-
-
-<div class="container py-5">
-    <div class="d-flex justify-content-start mb-3">
-        <a asp-area="" asp-controller="Orders" asp-action="Add" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Add Order
-        </a>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-body">
-            @if (Model != null && Model.Any())
-            {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Customer Name</th>
-                            <th>Order Date</th>
-                            <th>Required Date</th>
-                            <th>Shipped Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var order in Model)
-                        {
-                            <tr>
-                                <td>@order.Customer.CustomerName</td>
-                                <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                                <td>@order.RequiredDate.ToString("yyyy-MM-dd")</td>
-                                <td>
-                                    @if (!order.ShippedDate.HasValue)
-                                    {
-                                        <span class="text-danger">Not Shipped</span>
-                                    }
-                                    else
-                                    {
-                                        @order.ShippedDate.Value.ToString("yyyy-MM-dd")
-                                    }
-                                </td>
-                                <td>
-                                    <a asp-area="" asp-controller="Orders" asp-action="Edit" asp-route-id="@order.OrderID" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p>No orders found!</p>
-            }
-        </div>
+    <!-- Container to hold the search results -->
+    <div id="orderListContainer">
+       
+        @* This will be dynamically updated *@
+        @await Html.PartialAsync("OrderListPartial", Model)
     </div>
 </div>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        $(document).ready(function () {
+            // Attach event listener to the search input
+            $('#searchTerm').on('input', function () {
+                var searchTerm = $(this).val();
+
+
+                // Make AJAX request to the OrderSearch action
+                $.ajax({
+                    url: '@Url.Action("OrderSearch", "Orders")',
+                    type: 'GET',
+                    data: { searchTerm: searchTerm },
+                    success: function (result) {
+                        // Update the order list container with the returned HTML
+                        $('#orderListContainer').html(result);
+
+                    },
+                    error: function () {
+                        alert('Failed to retrieve data.');
+                    }
+                });
+            });
+        });
+    </script>
 }

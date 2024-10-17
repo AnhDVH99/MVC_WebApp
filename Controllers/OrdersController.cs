@@ -86,10 +86,32 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
 
         [HttpGet]
         [ActionName("List")]
-        public async Task<IActionResult> Order()
+        public async Task<IActionResult> Order(string sortOrder)
         {
-            var orders = await orderRepository.GetAllAsync();
-            return View(orders);
+            ViewData["OrderDateSort"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewData["CurrentSort"] = sortOrder;
+
+            var orders = await orderRepository.GetAllOrder();
+
+            switch (sortOrder)
+            {
+                case "date_desc":
+                    orders = orders.OrderByDescending(o => o.OrderDate);
+                    break;
+
+                default:
+                    orders = orders.OrderBy(o => o.OrderDate);
+                    break;
+            }
+
+            return View(orders.ToList());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderSearch(string searchTerm)
+        {
+            var orders = await orderRepository.SearchOrdersAsync(searchTerm);
+            return PartialView("OrderListPartial", orders); // Ensure it redirects to the list view
         }
 
         [HttpGet]
@@ -294,6 +316,37 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 environmentTax = priceDetail.EnvirontmentTax,
                 priceBeforeTax = priceDetail.PriceBeforeTax, // if you calculate it separately
             });
+        }
+
+
+        public async Task<IActionResult> Clone(Guid id)
+        {
+            var existingOrder = await orderRepository.GetAsync(id);
+            if (existingOrder == null)
+            {
+                return NotFound();
+            }
+            var currentUser = await userManager.GetUserAsync(User);
+            // Create a new order based on the existing one
+            var newOrder = new Order
+            {
+                // Clone properties as needed, ensuring you set new values for fields like OrderID
+                CustomerID = existingOrder.CustomerID,
+                OrderDate = DateTime.Now, // Set current date or modify as needed
+                RequiredDate = existingOrder.RequiredDate,
+                OrderStatus = existingOrder.OrderStatus,
+                SysU = existingOrder.SysU,
+                SysD = existingOrder.SysD
+                
+                // Clone any other relevant properties here
+                // Clone OrderDetails if needed
+            };
+
+            // Save the new order to the database
+            await orderRepository.AddAsync(newOrder);
+
+            // Redirect to the order list or detail view
+            return RedirectToAction("List");
         }
     }
 }
