@@ -75,7 +75,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductID", orderDetail.ProductID);
-            ViewData["PriceDetailID"] = new SelectList(_context.PriceDetails, "PriceDetailID", "PriceDetailID",orderDetail.PriceDetailID);
             ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", orderDetail.OrderID);
             ViewData["UnitID"] = new SelectList(_context.Units, "UnitID", "UnitID", orderDetail.UnitID);
             return View(orderDetail);
@@ -95,7 +94,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 return NotFound();
             }
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductCode", orderDetail.ProductID);
-            ViewData["PriceDetailID"] = new SelectList(_context.PriceDetails, "PriceDetailID", "VAT", orderDetail.PriceDetailID);
             ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderDate", orderDetail.OrderID);
             ViewData["UnitID"] = new SelectList(_context.Units, "UnitID", "UnitCode", orderDetail.UnitID);
             return View(orderDetail);
@@ -134,7 +132,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductCode", orderDetail.ProductID);
-            ViewData["PriceDetailID"] = new SelectList(_context.PriceDetails, "PriceDetailID", "PriceDetailID", orderDetail.PriceDetailID);
             ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderDate", orderDetail.OrderID);
             ViewData["UnitID"] = new SelectList(_context.Units, "UnitID", "UnitID", orderDetail.UnitID);
             return View(orderDetail);

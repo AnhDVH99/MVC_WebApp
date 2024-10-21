@@ -1,12 +1,21 @@
 ﻿@model List<ASP.NET_Core_MVC_Piacom.Models.Domain.Order>
 
 
+@{
+    ViewData["Title"] = "Order List";
+}
+
 <div class="container">
     <h1 class="mb-4 text-center">Order List</h1>
 
+    <div class="d-flex justify-content-start mb-3">
+        <a asp-area="" asp-controller="Orders" asp-action="Add" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create Order
+        </a>
+    </div>
     <!-- Search Form -->
     <div class="mb-3">
-        <input type="text" id="searchTerm" class="form-control" placeholder="Search by Customer Name" />
+        <input type="text" id="searchTerm" class="form-control" placeholder="Search by Customer Name" value="@ViewData["searchTerm"]"/>
     </div>
     <!-- Container to hold the search results -->
     <div id="orderListContainer">
@@ -22,13 +31,13 @@
             // Attach event listener to the search input
             $('#searchTerm').on('input', function () {
                 var searchTerm = $(this).val();
-
+                var sortOrder = '@ViewData["CurrentSort"]';
 
                 // Make AJAX request to the OrderSearch action
                 $.ajax({
                     url: '@Url.Action("OrderSearch", "Orders")',
                     type: 'GET',
-                    data: { searchTerm: searchTerm },
+                    data: { searchTerm: searchTerm, sortOrder : sortOrder },
                     success: function (result) {
                         // Update the order list container with the returned HTML
                         $('#orderListContainer').html(result);

@@ -39,6 +39,20 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddPriceRequest addPriceRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                {
+                    var key = state.Key;
+                    var errors = state.Value.Errors;
+                    foreach (var error in errors)
+                    {
+                        // Log the key and error message
+                        Console.WriteLine($"Key: {key}, Error: {error.ErrorMessage}");
+                    }
+                }
+                return View(addPriceRequest);
+            }
            var currentUser = await userManager.GetUserAsync(User);
             var price = new Price
             {
@@ -115,8 +129,24 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                         // Log the key and error message
                         Console.WriteLine($"Key: {key}, Error: {error.ErrorMessage}");
                     }
+
                 }
-                return RedirectToAction("Edit", new { id = editPriceRequest.PriceID });
+                var productList = await productRepository.GetAllAsync();
+                var unitList = await unitRepository.GetAllAsync();
+
+                editPriceRequest.Products = productList.Select(p => new SelectListItem
+                {
+                    Value = p.ProductID.ToString(),
+                    Text = p.ProductName
+                }).ToList();
+
+                editPriceRequest.Units = unitList.Select(u => new SelectListItem
+                {
+                    Value = u.UnitID.ToString(),
+                    Text = u.UnitName
+                }).ToList();
+
+                return View(editPriceRequest);
             }
             var price = new Price
             {   
@@ -126,9 +156,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 ToDate = editPriceRequest.ToDate,
                 SysU = currentUser?.UserName,
                 SysD = DateTime.Now,
-                PriceDetails = editPriceRequest.PriceDetails != null
-                       ? editPriceRequest.PriceDetails.ToList()
-                       : new List<PriceDetail>()
+                PriceDetails = editPriceRequest.PriceDetails ?? new List<PriceDetail>()
             };
             var updatedPriceDetails = editPriceRequest.PriceDetails;
             var existingPriceDetails = price.PriceDetails.ToList();

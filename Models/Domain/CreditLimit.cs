@@ -12,10 +12,10 @@ public class CreditLimit
     public Guid CustomerID { get; set; }
 
     [Required]
-    public string FromDate { get; set; }
+    public DateTime FromDate { get; set; }
 
     [Required]
-    public string ToDate { get; set; }
+    public DateTime ToDate { get; set; }
 
     public string? CreditType { get; set; }
 

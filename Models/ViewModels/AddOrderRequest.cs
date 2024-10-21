@@ -14,11 +14,12 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
         public DateTime OrderDate { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "Please enter required date!")]
-        public DateTime RequiredDate { get; set; } = DateTime.Now;
+        public DateTime RequiredDate { get; set; } = DateTime.Now.AddDays(7);
 
         public DateTime? ShippedDate { get; set; } 
 
-        public string? OrderStatus { get; set; }
+        [Required]
+        public string OrderStatus { get; set; }
 
         public string? Comment { get; set; }
 

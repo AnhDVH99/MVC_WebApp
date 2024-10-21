@@ -14,10 +14,10 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
         public Guid CustomerID { get; set; }
 
         [Required(ErrorMessage ="Please select Date!")]
-        public string FromDate { get; set; }
+        public DateTime FromDate { get; set; }
 
         [Required(ErrorMessage = "Please select Date!")]
-        public string ToDate { get; set; }
+        public DateTime ToDate { get; set; }
 
         public string? CreditType { get; set; }
 

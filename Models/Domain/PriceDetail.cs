@@ -5,7 +5,6 @@ namespace ASP.NET_Core_MVC_Piacom.Models.Domain;
 
 public class PriceDetail
 {
-    [Required(ErrorMessage ="Required")]
     public Guid PriceDetailID { get; set; }
 
     [Required(ErrorMessage = "Required")]

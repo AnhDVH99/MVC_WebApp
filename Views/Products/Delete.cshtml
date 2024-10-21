@@ -1,0 +1,84 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.Domain.Product
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="mb-4 text-center">Delete Product</h1>
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Confirm Deletion</h4>
+                    <hr />
+
+                    @* Check if there is an error message to display *@
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger text-center">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <h3 class="text-center mb-4">Are you sure you want to delete this product?</h3>
+                    <dl class="row">
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.ProductCode)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ProductCode)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.ProductName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ProductName)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.ProductDescription)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ProductDescription)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.ProductStatus)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ProductStatus)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.SysU)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.SysU)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.SysD)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.SysD)
+                        </dd>
+                    </dl>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="ProductID" />
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left-circle"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

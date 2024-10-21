@@ -6,14 +6,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ASP.NET_Core_MVC_Piacom</title>
+    <title>@ViewData["Title"] - Piacom </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ASP.NET_Core_MVC_Piacom.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow">
+        <nav id="navbar" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Piacom</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -34,7 +35,7 @@
                                     <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">Customers</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Orders" asp-action="List">Orders</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Units" asp-action="Index">Units</a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="List">Products</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Price" asp-action="List">Prices</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="List">Employees</a>
                                     <!-- Add more dropdown items as needed -->
@@ -49,12 +50,6 @@
                                     <a class="dropdown-item" asp-area="" asp-controller="CreditLimit" asp-action="List">Credit Limits</a>
                                     <!-- Add more dropdown items as needed -->
                                 </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-controller="Price" asp-action="List">Price</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-controller="PriceDetails" asp-action="Index">Price Details</a>
                             </li>
                         </ul>
                     </div>
@@ -81,13 +76,13 @@
                            asp-area=""
                            asp-controller="Account"
                            asp-action="Login">
-                            Login
+                            Sign in
                         </a>
                         <a class=" btn me-3 bg-light text-dark"
                            asp-area=""
                            asp-controller="Account"
                            asp-action="Register">
-                            Register
+                            Sign up
                         </a>
                     }
 

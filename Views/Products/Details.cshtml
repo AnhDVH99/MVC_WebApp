@@ -1,0 +1,70 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.Domain.Product
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="mb-4 text-center">Product Details</h1>
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Product Information</h4>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.ProductCode)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ProductCode)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.ProductName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ProductName)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.ProductDescription)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ProductDescription)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.ProductStatus)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ProductStatus)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.SysU)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.SysU)
+                        </dd>
+                        <dt class="col-sm-4 fw-bold">
+                            @Html.DisplayNameFor(model => model.SysD)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.SysD)
+                        </dd>
+                    </dl>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model?.ProductID" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left-circle"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

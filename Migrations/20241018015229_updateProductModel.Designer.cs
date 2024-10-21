@@ -4,6 +4,7 @@ using ASP.NET_Core_MVC_Piacom.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    partial class PiacomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241018015229_updateProductModel")]
+    partial class updateProductModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -428,13 +431,13 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                     b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Order", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -458,19 +461,19 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                     b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Price", "PriceNav")
                         .WithMany("PriceDetails")
                         .HasForeignKey("PriceID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ASP.NET_Core_MVC_Piacom.Models.Domain.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("PriceNav");

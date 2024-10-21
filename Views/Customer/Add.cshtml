@@ -1,5 +1,10 @@
 ﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddCustomerRequest
 
+
+@{
+    ViewData["Title"] = "Create Customer";
+}
+
 <h1 class="text-center">Add Customer</h1>
 
 <div class="container py-5">
@@ -22,7 +27,7 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
-                                <input type="text" class="form-control" id="phone" asp-for="Phone" placeholder="Phone" />
+                                <input type="number" class="form-control" id="phone" asp-for="Phone" placeholder="Phone" />
                             </div>
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>

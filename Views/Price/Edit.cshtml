@@ -1,5 +1,10 @@
 ﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.EditPriceRequest
 
+
+@{
+    ViewData["Title"] = "Edit Price";
+}
+
 <div>
     <div class="container">
         <h1 class="styled-heading">Add Price</h1>
@@ -19,7 +24,7 @@
 
             <div class="col-md-3">
                 <label class="form-label">From date</label>
-                <input type="date" class="form-control short-input" id="fromdDate" asp-for="FromDate" />
+                <input type="datetime-local" class="form-control short-input" id="fromdDate" asp-for="FromDate" />
                 <span asp-validation-for="FromDate" class="text-danger"></span>
             </div>
         </div>
@@ -27,7 +32,7 @@
         <div class="row mb-3">
             <div class="col-md-3">
                 <label class="form-label">To date</label>
-                <input type="date" class="form-control short-input" id="toDate" asp-for="ToDate" />
+                <input type="datetime-local" class="form-control short-input" id="toDate" asp-for="ToDate" />
                 <span asp-validation-for="ToDate" class="text-danger"></span>
             </div>
             <input type="hidden" class="form-control short-input" id="sysU" asp-for="SysU" />
@@ -46,12 +51,14 @@
                     <tr>
                         <th>Product Name</th>
                         <th>Unit Name</th>
+                        <th>Price</th>
                         <th>VAT</th>
                         <th>EnvirontmentTax</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="priceDetailRows">
+                    @if (Model.PriceDetails != null && Model.PriceDetails.Any())
                     @for (int i = 0; i < Model.PriceDetails.Count; i++)
                     {
                         <tr>
@@ -64,12 +71,15 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="hidden" asp-for="PriceDetails[i].PriceDetailID" class="form-control" />
-                                <input type="hidden" asp-for="PriceDetails[i].PriceID" class="form-control" />
-                                <input type="number" asp-for="PriceDetails[i].VAT" class="form-control" />
+                                <input type="number" asp-for="PriceDetails[i].Price" class="form-control" required />
                             </td>
                             <td>
-                                <input type="number" asp-for="PriceDetails[i].EnvirontmentTax" class="form-control" />
+                                <input type="hidden" asp-for="PriceDetails[i].PriceDetailID" class="form-control" />
+                                <input type="hidden" asp-for="PriceDetails[i].PriceID" class="form-control" />
+                                <input type="number" asp-for="PriceDetails[i].VAT" class="form-control" required/>
+                            </td>
+                            <td>
+                                <input type="number" asp-for="PriceDetails[i].EnvirontmentTax" class="form-control" required/>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
@@ -125,6 +135,9 @@
                     <select name="PriceDetails[${rowCount}].UnitID" class="form-control">
                         ${unitOptions}
                     </select>
+                </td>
+                <td>
+                    <input type="number" name="PriceDetails[${rowCount}].Price" class="form-control" />
                 </td>
                 <td>
                     <input type="number" name="PriceDetails[${rowCount}].VAT" class="form-control" />

@@ -53,8 +53,11 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddCustomerRequestValidator
 builder.Services.AddValidatorsFromAssemblyContaining<AccountValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<EditCustomerRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UnitValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<OrderDetailValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<EditOrderRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AddPriceValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<EditPriceValidator>();
 
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 

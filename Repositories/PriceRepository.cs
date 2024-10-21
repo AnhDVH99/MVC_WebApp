@@ -93,6 +93,7 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
                         {  
                             dbPriceDetail.ProductID = existingPriceDetails.ProductID;
                             dbPriceDetail.UnitID = existingPriceDetails.UnitID;
+                            dbPriceDetail.Price = existingPriceDetails.Price;
                             dbPriceDetail.VAT = existingPriceDetails.VAT;
                             dbPriceDetail.EnvirontmentTax = existingPriceDetails.EnvirontmentTax;
                         }

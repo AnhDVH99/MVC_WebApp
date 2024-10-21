@@ -15,8 +15,8 @@ public class Product
 
     public string ProductStatus { get; set; }
 
-    public string SysU { get; set; }
+    public string? SysU { get; set; }
     
-    public DateTime SysD { get; set; }
+    public DateTime SysD { get; set; }  = DateTime.Now;
 
 }

@@ -11,6 +11,7 @@ using ASP.NET_Core_MVC_Piacom.Repositories;
 using ASP.NET_Core_MVC_Piacom.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
@@ -46,6 +47,10 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             var customers = await customerRepository.GetAllAsync();
             var model = new AddOrderRequest
             {
+
+                OrderDate = DateTime.Now,
+                RequiredDate = DateTime.Now.AddDays(7),
+                ShippedDate = null,
                 Employees = employees.Select(e => new SelectListItem
                 {
                     Text = e.FirstName,
@@ -86,34 +91,51 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
 
         [HttpGet]
         [ActionName("List")]
-        public async Task<IActionResult> Order(string sortOrder)
+        public async Task<IActionResult> Order(string sortOrder, string searchTerm)
+        {
+            var orders = await GetSortedOrders(sortOrder, searchTerm);
+            return View(orders);
+        }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> OrderSearch(string sortOrder, string searchTerm)
+        {
+            var orders = await GetSortedOrders(sortOrder, searchTerm);
+
+            return PartialView("OrderListPartial", orders);
+        }
+
+        private async Task<List<Order>> GetSortedOrders(string sortOrder, string searchTerm)
         {
             ViewData["OrderDateSort"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
             ViewData["CurrentSort"] = sortOrder;
+            ViewData["searchTerm"] = searchTerm;
 
-            var orders = await orderRepository.GetAllOrder();
+            // Retrieve orders, applying search if needed
+            IEnumerable<Order> orders;
+            if (!String.IsNullOrEmpty(searchTerm))
+            {
+                orders = await orderRepository.SearchOrdersAsync(searchTerm);
+            }
+            else
+            {
+                orders = await orderRepository.GetAllOrder();
+            }
 
+            // Apply sorting
             switch (sortOrder)
             {
                 case "date_desc":
                     orders = orders.OrderByDescending(o => o.OrderDate);
                     break;
-
                 default:
                     orders = orders.OrderBy(o => o.OrderDate);
                     break;
             }
 
-            return View(orders.ToList());
+            return orders.ToList();
         }
-
-        [HttpGet]
-        public async Task<IActionResult> OrderSearch(string searchTerm)
-        {
-            var orders = await orderRepository.SearchOrdersAsync(searchTerm);
-            return PartialView("OrderListPartial", orders); // Ensure it redirects to the list view
-        }
-
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -247,12 +269,12 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             var updatedOrder = await orderRepository.UpdateAsync(order);
             if (updatedOrder != null)
             {
-                // Show success notification
-                return RedirectToAction("List");
+                TempData["SuccessMessage"] = "Order updated successfully!";
+                RedirectToAction("Edit", new { id = editOrderRequest.OrderID });
             }
             else
             {
-                // Show error notification
+                TempData["ErrorMessage"] = "Failed to update the order.";
             }
 
             return RedirectToAction("Edit", new { id = editOrderRequest.OrderID });
@@ -274,28 +296,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetProductTaxes(Guid productId)
-        {
-            var taxes = await orderRepository.GetProductTaxesAsync(productId);
-            Console.WriteLine(productId);
-            if (taxes == null)
-            {
-                return NotFound();
-            }
-
-            // Return VAT and EnvironmentTax as JSON
-            return Json(new
-            {
-                vat = taxes.Value.VAT,
-                environmentTax = taxes.Value.EnvironmentTax,
-                price = taxes.Value.Price,
-                priceBeforeTax = taxes.Value.PriceBeforeTax,
-                
-            });
-
-            
-        }
 
         [Route("Orders/GetProductPriceDetail")]
         [HttpGet]
@@ -335,11 +335,10 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 OrderDate = DateTime.Now, // Set current date or modify as needed
                 RequiredDate = existingOrder.RequiredDate,
                 OrderStatus = existingOrder.OrderStatus,
+                Comment = existingOrder.Comment,
                 SysU = existingOrder.SysU,
-                SysD = existingOrder.SysD
+                SysD = existingOrder.SysD,
                 
-                // Clone any other relevant properties here
-                // Clone OrderDetails if needed
             };
 
             // Save the new order to the database

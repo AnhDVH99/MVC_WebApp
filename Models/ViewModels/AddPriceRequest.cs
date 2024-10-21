@@ -13,7 +13,7 @@ namespace ASP.NET_Core_MVC_Piacom.Models.ViewModels
 
         public DateTime ToDate { get; set; }
 
-        public string SysU { get; set; }
+        public string? SysU { get; set; }
 
         public DateTime SysD { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ASP.NET_Core_MVC_Piacom.Models.Domain.Payment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Payment list";
 }
 
 <h1>Index</h1>
@@ -20,9 +20,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discount)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PaymentStatus)
@@ -44,9 +41,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discount)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PaymentStatus)

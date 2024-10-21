@@ -1,5 +1,10 @@
 @model ASP.NET_Core_MVC_Piacom.Models.ViewModels.EditCustomerRequest
 
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+
+
 <div>
     <div class="container">
         <h1 class="styled-heading">Edit customer</h1>
@@ -21,7 +26,7 @@
 
                 <div class="col-md-4">
                     <label class="form-label">Phone</label>
-                    <input type="text" class="form-control short-input" id="phone" asp-for="Phone" />
+                    <input type="number" class="form-control short-input" id="phone" asp-for="Phone" />
                     <span asp-validation-for="Phone" class="text-danger"></span>
                 </div>
 
@@ -90,19 +95,20 @@
                         </tr>
                     </thead>
                     <tbody id="creditLimitRows">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         @for (int i = 0; i < Model.CreditLimits.Count; i++)
                         {
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <tr>
                                 <td>
                                     <input type="hidden" asp-for="CreditLimits[i].CreditLimitID" class="form-control"  />
                                     <input type="number" asp-for="CreditLimits[i].Total" class="form-control" required/>
                                 </td>
                                 <td>
-                                    <input type="date" asp-for="CreditLimits[i].FromDate" class="form-control" required />
+                                    <input type="datetime-local" asp-for="CreditLimits[i].FromDate" class="form-control"  />
+                                    <span asp-validation-for="CreditLimits[i].FromDate" class="text-danger"></span>
                                 </td>
                                 <td>
-                                    <input type="date" asp-for="CreditLimits[i].ToDate" class="form-control" required />
+                                    <input type="datetime-local" asp-for="CreditLimits[i].ToDate" class="form-control"  />
                                     <span asp-validation-for="CreditLimits[i].ToDate" class="text-danger"></span>
                                 </td>
                                 <td>
@@ -149,10 +155,10 @@
                                                             <input type="number" name="CreditLimits[` + rowCount + `].Total" class="form-control" />
                                                         </td>
                                                         <td>
-                                                            <input type="date" name="CreditLimits[` + rowCount + `].FromDate" class="form-control" />
+                                                            <input type="datetime-local" name="CreditLimits[` + rowCount + `].FromDate" class="form-control" />
                                                         </td>
                                                         <td>
-                                                            <input type="date" name="CreditLimits[` + rowCount + `].ToDate" class="form-control"  />
+                                                            <input type="datetime-local" name="CreditLimits[` + rowCount + `].ToDate" class="form-control"  />
                                                         </td>
                                                         <td>
                                                             <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>

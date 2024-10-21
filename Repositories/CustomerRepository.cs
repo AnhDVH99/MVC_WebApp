@@ -98,6 +98,14 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             .FirstOrDefaultAsync(c => c.CustomerID == id); // Query by CustomerID
         }
 
+        public async Task<CreditLimit?> GetCreditLimitByCustomerAndDateAsync(Guid cusId, DateTime orderDate)
+        {
+            return await piacomDbContext.CreditLimits
+                .Where(c => c.CustomerID == cusId && c.FromDate <= orderDate && c.ToDate >= orderDate)
+                .OrderByDescending(c => c.FromDate)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task ImportCustomersFromExcelAsync(Stream fileStream)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -136,6 +144,11 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
             }
         }
 
+        public bool isWithinCreditLimit(CreditLimit creditLimit, decimal orderTotalAmount)
+        {
+            if (creditLimit == null) return false;
+                return orderTotalAmount <= creditLimit.Total;
+        }
 
         public async Task<Customer?> UpdateAsync(Customer customer)
         {

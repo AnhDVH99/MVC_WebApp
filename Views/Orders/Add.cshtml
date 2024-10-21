@@ -1,6 +1,10 @@
 ﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddOrderRequest
 
-<h1 class="text-center">Add Order</h1>
+
+@{
+    ViewData["Title"] = "Create Orders";
+}
+<h1 class="text-center">Create Order</h1>
 
 <div class="container py-5">
     @if (Model != null)
@@ -13,13 +17,15 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Order Date</label>
-                            <input type="date" class="form-control" id="orderDate" asp-for="OrderDate" />
+                            <input type="datetime-local" class="form-control" id="orderDate" asp-for="OrderDate"
+                                   value="@Model.OrderDate.ToString("yyyy-MM-dd HH:mm")" />
                             <span asp-validation-for="OrderDate" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Required Date</label>
-                            <input type="date" class="form-control" id="requiredDate" asp-for="RequiredDate" />
+                            <input type="datetime-local" class="form-control" id="requiredDate" asp-for="RequiredDate"
+                                   value="@Model.RequiredDate.ToString("yyyy-MM-dd HH:mm")" />
                             <span asp-validation-for="RequiredDate" class="text-danger"></span>
                         </div>
                     </div>
@@ -27,13 +33,14 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Shipped Date</label>
-                            <input type="date" class="form-control" id="shippedDate" asp-for="ShippedDate" />
+                            <input type="datetime-local" class="form-control" id="shippedDate" asp-for="ShippedDate"
+                                    />
                             <span asp-validation-for="ShippedDate" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Order Status</label>
-                            <input type="text" class="form-control" id="orderStatus" asp-for="OrderStatus" placeholder="Order Status" />
+                            <input type="text" class="form-control" id="orderStatus" asp-for="OrderStatus" placeholder="Order Status" required />
                             <span asp-validation-for="OrderStatus" class="text-danger"></span>
                         </div>
                     </div>
@@ -103,5 +110,42 @@
             transform: scale(1.05); /* Slightly enlarge the button */
         }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+            const maxYear = new Date();
+            maxYear.setFullYear(maxYear.getFullYear() + 1); // Set max year to next year
+
+            const flatpickrOptions = {
+                enableTime: true,
+                dateFormat: "Y-m-d hh:mm tt",
+                minDate: "today",
+                maxDate: maxYear,
+                time_24hr: true,
+                allowInput: true,
+                onClose: function (selectedDates, dateStr, instance) {
+                    // Validate year length
+                    const year = dateStr.split('-')[0]; // Get the year part
+
+                    // Check if year has more than 5 digits
+                    if (year.length > 5) {
+                        // Remove last digit and set to max year if necessary
+                        dateStr = dateStr.substring(0, dateStr.length - 1);
+                        instance.setDate(dateStr); // Set the date to the modified value
+                    }
+
+                    // Check if the year is less than the max year and reset if necessary
+                    const enteredYear = parseInt(year, 10);
+                    if (enteredYear > maxYear.getFullYear()) {
+                        instance.setDate(maxYear.toISOString().slice(0, 19)); // Set to max year
+                    }
+                }
+            };
+
+            flatpickr("#orderDate", flatpickrOptions);
+            flatpickr("#requiredDate", flatpickrOptions);
+            flatpickr("#shippedDate", flatpickrOptions);
+        });
+</script>
+
 
 @await Html.PartialAsync("_ValidationScriptsPartial")

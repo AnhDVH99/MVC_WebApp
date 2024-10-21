@@ -16,8 +16,6 @@ public class OrderDetail
 
     [Required(ErrorMessage ="Quantity is required")]
     public int Quantity { get; set; }
-
-    public Guid PriceDetailID { get; set; }
     
     public float Price { get; set; }
 

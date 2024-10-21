@@ -7,28 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASP.NET_Core_MVC_Piacom.Data;
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
-    [Authorize(Roles = "Admin")]
-
-    public class UnitsController : Controller
+    public class ProductsController : Controller
     {
         private readonly PiacomDbContext _context;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public UnitsController(PiacomDbContext context)
+        public ProductsController(PiacomDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            this.userManager = userManager;
         }
 
-        // GET: Units
+        // GET: Products
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Units.ToListAsync());
+            return View(await _context.Products.ToListAsync());
         }
 
-        // GET: Units/Details/5
+        // GET: Products/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -36,40 +36,53 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 return NotFound();
             }
 
-            var unit = await _context.Units
-                .FirstOrDefaultAsync(m => m.UnitID == id);
-            if (unit == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductID == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(unit);
+            return View(product);
         }
 
-        // GET: Units/Create
+        // GET: Products/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Units/Create
+        // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UnitID,UnitCode,UnitName")] Unit unit)
+        public async Task<IActionResult> Create([Bind("ProductID,ProductCode,ProductName,ProductDescription,ProductStatus")] Product product)
         {
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"Property: {state.Key}, Error: {error.ErrorMessage}");
+                    }
+                }
+            }
             if (ModelState.IsValid)
             {
-                unit.UnitID = Guid.NewGuid();
-                _context.Add(unit);
+                var currentUser = await userManager.GetUserAsync(User);
+                product.SysU = currentUser?.UserName;
+                product.SysD = DateTime.Now;
+                product.ProductID = Guid.NewGuid();
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(unit);
+            return View(product);
         }
 
-        // GET: Units/Edit/5
+        // GET: Products/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -77,36 +90,39 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 return NotFound();
             }
 
-            var unit = await _context.Units.FindAsync(id);
-            if (unit == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(unit);
+            return View(product);
         }
 
-        // POST: Units/Edit/5
+        // POST: Products/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("UnitID,UnitCode,UnitName")] Unit unit)
+        public async Task<IActionResult> Edit(Guid id, [Bind("ProductID,ProductCode,ProductName,ProductDescription,ProductStatus")] Product product)
         {
-            if (id != unit.UnitID)
+            if (id != product.ProductID)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                var currentUser = await userManager.GetUserAsync(User);
                 try
                 {
-                    _context.Update(unit);
+                    product.SysU = currentUser?.UserName;
+                    product.SysD = DateTime.Now;
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UnitExists(unit.UnitID))
+                    if (!ProductExists(product.ProductID))
                     {
                         return NotFound();
                     }
@@ -117,10 +133,10 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(unit);
+            return View(product);
         }
 
-        // GET: Units/Delete/5
+        // GET: Products/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -128,47 +144,42 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
                 return NotFound();
             }
 
-            var unit = await _context.Units
-                .FirstOrDefaultAsync(m => m.UnitID == id);
-            if (unit == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductID == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(unit);
+            return View(product);
         }
 
-        // POST: Units/Delete/5
+        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var unit = await _context.Units.FindAsync(id);
-
-            if (unit == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-
             // Check if the unit is referenced in any PriceDetails
-            bool isReferenced = await _context.PriceDetails.AnyAsync(pd => pd.UnitID == id);
+            bool isReferenced = await _context.PriceDetails.AnyAsync(pd => pd.ProductID == id);
 
             if (isReferenced)
             {
                 TempData["ErrorMessage"] = "This unit is referenced in price details and cannot be deleted.";
                 return RedirectToAction(nameof(Delete), new { id });
             }
-
-            // If not referenced, proceed with deletion
-            _context.Units.Remove(unit);
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UnitExists(Guid id)
+        private bool ProductExists(Guid id)
         {
-            return _context.Units.Any(e => e.UnitID == id);
+            return _context.Products.Any(e => e.ProductID == id);
         }
     }
 }

@@ -18,5 +18,9 @@ namespace ASP.NET_Core_MVC_Piacom.Repositories
 
         Task<byte[]> ExportCustomersToExcelAsync();
         Task ImportCustomersFromExcelAsync(Stream fileStream);
+
+        Task<CreditLimit?> GetCreditLimitByCustomerAndDateAsync(Guid cusId, DateTime orderDate);
+
+        bool isWithinCreditLimit(CreditLimit creditLimit, decimal orderTotalAmount);
     }
 }
