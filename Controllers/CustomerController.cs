@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers;
-[Authorize(Roles = "Admin")]
+
 
 public class CustomerController : Controller
 {
@@ -77,6 +77,7 @@ public class CustomerController : Controller
     }
 
     [HttpGet]
+    [Authorize(Policy = "ViewCustomer")]
     [ActionName("List")]
     public async Task<IActionResult> CustomerList()
     {

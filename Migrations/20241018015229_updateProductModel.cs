@@ -40,7 +40,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 column: "UnitID",
                 principalTable: "Units",
                 principalColumn: "UnitID",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_PriceDetails_Prices_PriceID",
@@ -48,7 +48,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 column: "PriceID",
                 principalTable: "Prices",
                 principalColumn: "PriceID",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_PriceDetails_Products_ProductID",
@@ -56,7 +56,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 column: "ProductID",
                 principalTable: "Products",
                 principalColumn: "ProductID",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_PriceDetails_Units_UnitID",
@@ -64,7 +64,7 @@ namespace ASP.NET_Core_MVC_Piacom.Migrations
                 column: "UnitID",
                 principalTable: "Units",
                 principalColumn: "UnitID",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />

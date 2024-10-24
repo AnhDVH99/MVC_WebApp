@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ASP.NET_Core_MVC_Piacom.Data;
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
@@ -23,6 +24,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         // GET: Products
+        [Authorize(Policy = "ViewProduct")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Products.ToListAsync());
@@ -47,6 +49,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Policy = "CreateProduct")]
         public IActionResult Create()
         {
             return View();
@@ -83,6 +86,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Policy = "EditProduct")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)

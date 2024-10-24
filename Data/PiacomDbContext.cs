@@ -1,4 +1,4 @@
-    using ASP.NET_Core_MVC_Piacom.Models.Domain;
+using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP.NET_Core_MVC_Piacom.Data;
@@ -21,8 +21,6 @@ public class PiacomDbContext : DbContext
     public DbSet<Unit> Units { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<CreditLimit> CreditLimits { get; set; }
-
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 

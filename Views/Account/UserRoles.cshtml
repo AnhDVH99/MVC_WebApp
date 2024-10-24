@@ -1,0 +1,56 @@
+﻿<h2>User Roles</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var userRole in Model)
+            {
+                <tr>
+                    <td>@userRole.UserId</td>
+                    <td>@userRole.UserName</td>
+                    <td>@string.Join(", ", userRole.Roles)</td>
+                    <td>
+                        <form asp-action="RemoveUserRole" method="post">
+                            <input type="hidden" name="userId" value="@userRole.UserId" />
+                            <div class="form-group">
+                                <select name="roleName" class="form-control">
+                                    @foreach (var role in userRole.Roles)
+                                    {
+                                        <option value="@role">@role</option>
+                                    }
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-danger mt-2">Delete Selected Role</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No users found or an error occurred.</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize()]
 
     public class PriceController : Controller
     {
@@ -35,6 +35,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             return View();
         }
 
+        [Authorize(Policy = "CreatePrice")]
         [HttpPost]
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddPriceRequest addPriceRequest)
@@ -68,6 +69,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "ViewPrice")]
         [ActionName("List")]
         public async Task<IActionResult> PriceList()
         {
@@ -76,6 +78,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "EditPrice")]
         public async Task<IActionResult> Edit(Guid id)
         {
 

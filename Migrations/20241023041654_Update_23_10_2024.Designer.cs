@@ -4,6 +4,7 @@ using ASP.NET_Core_MVC_Piacom.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Core_MVC_Piacom.Migrations
 {
     [DbContext(typeof(PiacomDbContext))]
-    partial class PiacomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023041654_Update_23_10_2024")]
+    partial class Update_23_10_2024
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

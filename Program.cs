@@ -11,6 +11,83 @@ using System;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddAuthorization(options =>
+        {
+
+            options.AddPolicy("ViewCustomer", policy =>
+                policy.RequireClaim("Permission", "ViewCustomers"));
+
+
+            options.AddPolicy("CreateCustomer", policy =>
+                policy.RequireClaim("Permission", "CreateCustomers"));
+
+
+            options.AddPolicy("EditCustomer", policy =>
+                policy.RequireClaim("Permission", "EditCustomers"));
+
+
+            options.AddPolicy("ViewOrder", policy =>
+                policy.RequireClaim("Permission", "ViewOrders"));
+
+
+            options.AddPolicy("CreateOrder", policy =>
+                policy.RequireClaim("Permission", "CreateOrders"));
+
+
+            options.AddPolicy("EditOrder", policy =>
+                policy.RequireClaim("Permission", "EditOrders"));
+
+            options.AddPolicy("ViewUnit", policy =>
+                policy.RequireClaim("Permission", "ViewUnits"));
+
+
+            options.AddPolicy("CreateUnit", policy =>
+                policy.RequireClaim("Permission", "CreateUnits"));
+
+
+            options.AddPolicy("EditUnit", policy =>
+                policy.RequireClaim("Permission", "EditUnits"));
+
+            options.AddPolicy("ViewProduct", policy =>
+                policy.RequireClaim("Permission", "ViewProducts"));
+
+
+            options.AddPolicy("CreateProduct", policy =>
+                policy.RequireClaim("Permission", "CreateProducts"));
+
+
+            options.AddPolicy("EditProduct", policy =>
+                policy.RequireClaim("Permission", "EditProducts"));
+
+            options.AddPolicy("ViewPrice", policy =>
+                policy.RequireClaim("Permission", "ViewPrices"));
+
+
+            options.AddPolicy("CreatePrice", policy =>
+                policy.RequireClaim("Permission", "CreatePrices"));
+
+
+            options.AddPolicy("EditPrice", policy =>
+                policy.RequireClaim("Permission", "EditPrices"));
+
+            options.AddPolicy("ViewEmployee", policy =>
+                policy.RequireClaim("Permission", "ViewEmployees"));
+
+
+            options.AddPolicy("CreateEmployee", policy =>
+                policy.RequireClaim("Permission", "CreateEmployees"));
+
+
+            options.AddPolicy("EditEmployee", policy =>
+                policy.RequireClaim("Permission", "EditEmployees"));
+
+        });
+
+
+
+
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddFluentValidationAutoValidation()
@@ -27,7 +104,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.Configure <IdentityOptions > (options =>
+builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = true;

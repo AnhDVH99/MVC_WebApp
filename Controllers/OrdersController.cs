@@ -15,7 +15,7 @@ using Microsoft.Data.SqlClient;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize()]
 
     public class OrdersController : Controller
     {
@@ -40,6 +40,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
 
         // GET: Orders
         [HttpGet]
+        [Authorize(Policy = "CreateOrder")]
         public async Task<IActionResult> Add()
         {
             // get customer from repository
@@ -90,6 +91,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "ViewOrder")]
         [ActionName("List")]
         public async Task<IActionResult> Order(string sortOrder, string searchTerm)
         {
@@ -137,6 +139,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             return orders.ToList();
         }
         [HttpGet]
+        [Authorize(Policy = "EditOrder")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var productList = await productRepository.GetAllAsync();

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize()]
 
     public class EmployeesController : Controller
     {
@@ -25,8 +25,9 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
 
-        // GET: Orders
+
         [HttpGet]
+        [Authorize(Policy = "CreateEmployee")]
         public async Task<IActionResult> Add()
         {
             // get customer from repository
@@ -53,6 +54,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "ViewEmployee")]
         [ActionName("List")]
         public async Task<IActionResult> Employee()
         {
@@ -61,6 +63,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "EditEmployee")]
         public async Task<IActionResult> Edit(Guid id)
         {
 

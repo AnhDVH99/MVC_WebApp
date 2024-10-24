@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
 
     public class UnitsController : Controller
     {
@@ -23,12 +23,14 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         // GET: Units
+        [Authorize(Policy = "ViewUnit")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Units.ToListAsync());
         }
 
         // GET: Units/Details/5
+        
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -47,6 +49,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         // GET: Units/Create
+        [Authorize(Policy ="CreateUnit")]
         public IActionResult Create()
         {
             return View();

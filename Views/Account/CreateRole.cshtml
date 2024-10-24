@@ -1,0 +1,68 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.CreateRoleViewModel
+
+<h2 class="text-center my-4">Create a New Role</h2>
+
+<div class="container">
+    <form asp-action="CreateRole" method="post">
+        <div class="form-group">
+            <label asp-for="RoleName" class="control-label font-weight-bold"></label>
+            <input asp-for="RoleName" class="form-control" placeholder="Enter role name" />
+            <span asp-validation-for="RoleName" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+
+            @for (int i = 0; i < Model.Permissions.Count; i++)
+            {
+                var sanitizedPermission = Model.Permissions[i].Replace(" ", ""); // Replace spaces with underscores
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <!-- Adjust columns for responsive design -->
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="Permissions" value="@sanitizedPermission" id="@Model.Permissions[i]" />
+                        <label class="form-check-label" for="@Model.Permissions[i]">@Model.Permissions[i]</label>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block mt-3">Create Role</button>
+    </form>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success mt-3" role="alert">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger mt-3" role="alert">@TempData["ErrorMessage"]</div>
+    }
+</div>
+
+<style>
+    /* Custom styles for further enhancement */
+    h2 {
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        color: #343a40; /* Darker color for the heading */
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-check {
+        padding: 0.5rem; /* Add padding for better spacing */
+        border: 1px solid #ced4da; /* Light border around checkboxes */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s; /* Smooth background color transition */
+    }
+
+        .form-check:hover {
+            background-color: #f8f9fa; /* Change background color on hover */
+        }
+
+    .alert {
+        border-radius: 5px; /* Rounded corners for alerts */
+    }
+</style>

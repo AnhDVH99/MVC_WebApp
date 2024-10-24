@@ -1,0 +1,43 @@
+﻿@model List<ASP.NET_Core_MVC_Piacom.Models.ViewModels.AddRoleToUsers>
+
+<h2>Assign Role to User</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Assign Role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>
+                    <form asp-action="AddRoleToUser" method="post">
+                        <input type="hidden" name="userId" value="@user.UserId" />
+                        <select name="role" class="form-control">
+                            @foreach (var role in user.Roles)
+                            {
+                                <option value="@role">@role</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-primary mt-2">Assign Role</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
