@@ -133,6 +133,10 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -143,8 +147,8 @@ builder.Services.AddAuthentication(options =>
     .AddCookie()
     .AddGoogle(options =>
     {
-        options.ClientId = "449628414362-sof8cb52j4cfb5n7621fad4f7r56t3ei.apps.googleusercontent.com";
-        options.ClientSecret = "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";
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     }
     );
 
