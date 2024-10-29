@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ASP.NET_Core_MVC_Piacom.Controllers;
 
-
+[Authorize()]
 public class CustomerController : Controller
 {
     private readonly ICustomerRepository customerRepository;
@@ -25,6 +25,8 @@ public class CustomerController : Controller
     }
 
     [HttpGet]
+    [Authorize(Policy = "CreateCustomer")]
+
     public async Task<IActionResult> Add()
     {
         var employees = await employeeRepository.GetAllAsync();
@@ -120,6 +122,8 @@ public class CustomerController : Controller
     }
 
     [HttpPost]
+    [Authorize(Policy = "EditCustomer")]
+
     public async Task<IActionResult> Edit(EditCustomerRequest editCustomerRequest)
     {
         if (!ModelState.IsValid)

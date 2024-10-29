@@ -1,9 +1,13 @@
+using ASP.NET_Core_MVC_Piacom.Authorizes;
 using ASP.NET_Core_MVC_Piacom.Data;
 using ASP.NET_Core_MVC_Piacom.Models.Domain;
 using ASP.NET_Core_MVC_Piacom.Repositories;
 using ASP.NET_Core_MVC_Piacom.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,20 +19,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthorization(options =>
         {
 
-            options.AddPolicy("ViewCustomer", policy =>
-                policy.RequireClaim("Permission", "ViewCustomers"));
-
-
             options.AddPolicy("CreateCustomer", policy =>
                 policy.RequireClaim("Permission", "CreateCustomers"));
 
 
             options.AddPolicy("EditCustomer", policy =>
                 policy.RequireClaim("Permission", "EditCustomers"));
-
-
-            options.AddPolicy("ViewOrder", policy =>
-                policy.RequireClaim("Permission", "ViewOrders"));
 
 
             options.AddPolicy("CreateOrder", policy =>
@@ -38,19 +34,12 @@ builder.Services.AddAuthorization(options =>
             options.AddPolicy("EditOrder", policy =>
                 policy.RequireClaim("Permission", "EditOrders"));
 
-            options.AddPolicy("ViewUnit", policy =>
-                policy.RequireClaim("Permission", "ViewUnits"));
-
-
             options.AddPolicy("CreateUnit", policy =>
                 policy.RequireClaim("Permission", "CreateUnits"));
 
 
             options.AddPolicy("EditUnit", policy =>
                 policy.RequireClaim("Permission", "EditUnits"));
-
-            options.AddPolicy("ViewProduct", policy =>
-                policy.RequireClaim("Permission", "ViewProducts"));
 
 
             options.AddPolicy("CreateProduct", policy =>
@@ -60,19 +49,12 @@ builder.Services.AddAuthorization(options =>
             options.AddPolicy("EditProduct", policy =>
                 policy.RequireClaim("Permission", "EditProducts"));
 
-            options.AddPolicy("ViewPrice", policy =>
-                policy.RequireClaim("Permission", "ViewPrices"));
-
-
             options.AddPolicy("CreatePrice", policy =>
                 policy.RequireClaim("Permission", "CreatePrices"));
 
 
             options.AddPolicy("EditPrice", policy =>
                 policy.RequireClaim("Permission", "EditPrices"));
-
-            options.AddPolicy("ViewEmployee", policy =>
-                policy.RequireClaim("Permission", "ViewEmployees"));
 
 
             options.AddPolicy("CreateEmployee", policy =>
@@ -82,9 +64,30 @@ builder.Services.AddAuthorization(options =>
             options.AddPolicy("EditEmployee", policy =>
                 policy.RequireClaim("Permission", "EditEmployees"));
 
+
+            // Claim handler
+            options.AddPolicy("ViewOrder", policy =>
+            policy.Requirements.Add(new ViewClaimRequirement()));
+
+            options.AddPolicy("ViewCustomer", policy =>
+            policy.Requirements.Add(new ViewClaimRequirement()));
+
+            options.AddPolicy("ViewUnit", policy =>
+            policy.Requirements.Add(new ViewClaimRequirement()));
+
+            options.AddPolicy("ViewPrice", policy =>
+            policy.Requirements.Add(new ViewClaimRequirement()));
+
+            options.AddPolicy("ViewProduct", policy =>
+            policy.Requirements.Add(new ViewClaimRequirement()));
+
+            options.AddPolicy("ViewEmployee", policy =>
+            policy.Requirements.Add(new ViewClaimRequirement()));
+
+
         });
 
-
+builder.Services.AddSingleton<IAuthorizationHandler, ViewClaimHandler>();
 
 
 
@@ -100,6 +103,8 @@ builder.Services.AddDbContext<PiacomDbContext>(options =>
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PiacomDbAuthConnectionString")));
 
+
+
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
@@ -112,6 +117,39 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
     options.Password.RequiredLength = 6;
 });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.SlidingExpiration = true;
+    options.LoginPath = "/Account/Login"; // Redirect path for unauthorized users
+});
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+    .AddCookie()
+    .AddGoogle(options =>
+    {
+        options.ClientId = "449628414362-sof8cb52j4cfb5n7621fad4f7r56t3ei.apps.googleusercontent.com";
+        options.ClientSecret = "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";
+    }
+    );
+
+
+
 
 // Add Repos
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -138,6 +176,7 @@ builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 
+    
 // Configure middleware
 if (!app.Environment.IsDevelopment())
 {

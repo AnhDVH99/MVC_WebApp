@@ -1,0 +1,23 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.DeleteRoleViewModel
+
+<h2>Delete Role</h2>
+
+<h4>Are you sure you want to delete the role '@Model.RoleName'?</h4>
+
+<form asp-action="DeleteRole" method="post" asp-antiforgery="true">
+    <input type="hidden" asp-for="RoleId" />
+    <p>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="ViewAllRoles" class="btn btn-secondary">Cancel</a>
+    </p>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}

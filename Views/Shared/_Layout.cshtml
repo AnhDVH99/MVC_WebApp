@@ -11,6 +11,40 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ASP.NET_Core_MVC_Piacom.styles.css" asp-append-version="true" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Function to send a notification
+            function sendNotification() {
+                const notification = new Notification("Hello!", {
+                    body: "You have successfully allowed notifications!",
+                    icon: "images/Logo_Piacom.jpg" // Optional: path to an icon image
+                });
+
+                notification.onclick = function () {
+                    // Action when the notification is clicked
+                    window.focus();
+                };
+            }
+
+            // Check for notification permission
+            if (Notification.permission === "default") {
+                // Request permission
+                Notification.requestPermission().then(function (permission) {
+                    if (permission === "granted") {
+                        console.log("Notification permission granted.");
+                        // Send a notification after permission is granted
+                        sendNotification();
+                    } else if (permission === "denied") {
+                        console.log("Notification permission denied.");
+                    }
+                })
+            };
+            // } else if (Notification.permission === "granted") {
+            //     // If permission is already granted, send a notification
+            //     sendNotification();
+            // }
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -23,10 +57,10 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    @if (signInManager.IsSignedIn(User))
+                    @if (signInManager.IsSignedIn(User) || Context.User.Identity.IsAuthenticated)
                     {
                         <ul class="navbar-nav flex-grow-1">
-                            @if (User.IsInRole("SuperAdmin"))
+                            @if (User.IsInRole("SuperAdmin") )
                             {
                                 <!-- SuperAdmin specific items -->
                                 <li class="nav-item">
@@ -38,6 +72,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-action="CreateRole" asp-controller="Account">Create Role</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="ViewAllRoles" asp-controller="Account">View All Roles</a>
+                                </li>
+
                             }
 
                             @if (User.IsInRole("Admin"))
@@ -67,135 +105,50 @@
                                 </li>
                             }
 
-                            @if (User.IsInRole("User"))
-                            {
-                                <!-- User specific items -->
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="List" asp-controller="Orders">Orders</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="List" asp-controller="Customer">Customers</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="List" asp-controller="Price">Prices</a>
-                                </li>
-                            }
                             <!-- Orders Dropdown -->
                             @if (User.HasClaim(c => c.Value.Contains("Orders")))
                             {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="ordersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Orders
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="ordersDropdown">
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "ViewOrders"))
-                                        {
-                                            <a class="dropdown-item" asp-action="List" asp-controller="Orders">View Orders</a>
-                                        }
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "CreateOrders"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Add" asp-controller="Orders">Create Orders</a>
-                                        }
-                                    </div>
+                                <li class="nav-item ">
+                                    <a class="nav-link" asp-action="List" asp-controller="Orders">Orders</a>
                                 </li>
                             }
 
                             <!-- Products Dropdown -->
                             @if (User.HasClaim(c => c.Value.Contains("Products")))
                             {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Products
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="productsDropdown">
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "ViewProducts"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Index" asp-controller="Products">View Products</a>
-                                        }
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "CreateProducts"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Create" asp-controller="Products">Create Product</a>
-                                        }
-                                    </div>
+                                <li class="nav-item ">
+                                    <a class="nav-link" asp-action="Index" asp-controller="Products">Products</a>
                                 </li>
                             }
 
                             <!-- Customers Dropdown -->
                             @if (User.HasClaim(c => c.Value.Contains("Customers")))
                             {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="customersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Customers
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="customersDropdown">
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "ViewCustomers"))
-                                        {
-                                            <a class="dropdown-item" asp-action="List" asp-controller="Customer">Customer List</a>
-                                        }
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "CreateCustomers"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Add" asp-controller="Customer">Create Customer</a>
-                                        }
-                                    </div>
-                                </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" asp-action="List" asp-controller="Customer">Customers</a>
+                                    </li>
                             }
 
                             <!-- Prices Dropdown -->
                             @if (User.HasClaim(c => c.Value.Contains("Prices")))
                             {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="pricesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Prices
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="pricesDropdown">
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "ViewPrices"))
-                                        {
-                                            <a class="dropdown-item" asp-action="List" asp-controller="Price">View Prices</a>
-                                        }
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "CreatePrices"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Add" asp-controller="Price">Create Price</a>
-                                        }
-                                    </div>
+                                <li class="nav-item ">
+                                    <a class="nav-link" asp-action="List" asp-controller="Price">Prices</a>
                                 </li>
                             }
                             <!-- Employees Dropdown -->
                             @if (User.HasClaim(c => c.Value.Contains("Employees")))
                             {
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="" id="employeesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Employees
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="employeesDropdown">
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "ViewEmployees"))
-                                        {
-                                            <a class="dropdown-item" asp-action="List" asp-controller="Employees">View Employees</a>
-                                        }
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "CreateEmployees"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Add" asp-controller="Employees">Create Employee</a>
-                                        }
-                                    </div>
+                                    <a class="nav-link" asp-action="List" asp-controller="Employees">Employees</a>
                                 </li>
                             }
 
                             <!-- Units Dropdown -->
                             @if (User.HasClaim(c => c.Value.Contains("Units")))
                             {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="unitsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Units
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="unitsDropdown">
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "ViewUnits"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Index" asp-controller="Units">View Units</a>
-                                        }
-                                        @if (User.HasClaim(c => c.Type == "Permission" && c.Value == "CreateUnits"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Create" asp-controller="Units">Create Unit</a>
-                                        }
-                                    </div>
+                                <li class="nav-item ">
+                                    <a class="nav-link" asp-action="Index" asp-controller="Units">Units</a>
                                 </li>
                             }
 
@@ -205,7 +158,7 @@
 
 
                 <div class="d-flex align-items-center">
-                    @if (signInManager.IsSignedIn(User))
+                    @if (Context.User.Identity.IsAuthenticated)
                     {
                         <div class="me-3 text-light">
                             @User?.Identity?.Name
@@ -253,6 +206,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+

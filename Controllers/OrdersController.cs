@@ -139,7 +139,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             return orders.ToList();
         }
         [HttpGet]
-        [Authorize(Policy = "EditOrder")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var productList = await productRepository.GetAllAsync();
@@ -196,6 +195,8 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "EditOrder")]
+
         public async Task<IActionResult> Edit(EditOrderRequest editOrderRequest)
         {
             if (!ModelState.IsValid)
