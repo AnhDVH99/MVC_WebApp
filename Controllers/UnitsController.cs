@@ -71,7 +71,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
             }
             return View(unit);
         }
-
         // GET: Units/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -92,6 +91,7 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "EditUnit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("UnitID,UnitCode,UnitName")] Unit unit)
         {

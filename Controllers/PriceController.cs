@@ -78,7 +78,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "EditPrice")]
         public async Task<IActionResult> Edit(Guid id)
         {
 
@@ -118,6 +117,8 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "EditPrice")]
+
         public async Task<IActionResult> Edit(EditPriceRequest editPriceRequest)
         {
             var currentUser = await userManager.GetUserAsync(User);

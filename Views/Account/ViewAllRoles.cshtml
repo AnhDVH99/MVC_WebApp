@@ -1,0 +1,87 @@
+﻿<h2 class="my-4">All Roles</h2>
+
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Role Name</th>
+            <th>Permissions</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var role in Model)
+            {
+                <tr>
+                    <td class="align-middle role-name-cell"><strong>@role.RoleName</strong></td>
+                    <td class="align-middle">
+                        @if (role.Permissions != null && role.Permissions.Count > 0)
+                        {
+                            <ul class="custom-bullet-list">
+                                @foreach (var permission in role.Permissions)
+                                {
+                                    <li>@permission</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No permissions assigned</span>
+                        }
+                    </td>
+                    <td class="align-middle text-center">
+                        <a asp-action="EditRole" asp-route-roleId="@role.RoleId" class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Role Permissions">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a asp-action="DeleteRole" asp-route-roleId="@role.RoleId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">No roles found or an error occurred.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .custom-bullet-list {
+        padding-left: 10; /* Remove padding to adjust layout */
+        list-style-type: none; /* Remove default list style */
+        display: grid; /* Use grid for layout */
+        grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
+        gap: 10px; /* Space between items */
+    }
+
+        .custom-bullet-list li {
+            margin-bottom: 0; /* Remove margin as we use grid gap */
+            font-size: 14px; /* Adjust text size if needed */
+            color: #555; /* Optional: Adjust color for better contrast */
+            position: relative; /* Allow positioning for custom bullet */
+        }
+
+            .custom-bullet-list li::before {
+                content: '•'; /* Custom bullet character */
+                position: absolute; /* Position it relative to the list item */
+                left: -15px; /* Adjust position to the left */
+                color: #007bff; /* Color for the bullet */
+            }
+
+    /* Style for role name cell */
+    .role-name-cell {
+        max-width: 200px; /* Set maximum width for role name */
+        white-space: nowrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide overflow */
+        text-overflow: ellipsis; /* Show ellipsis for overflow text */
+    }
+</style>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

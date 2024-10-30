@@ -1,0 +1,68 @@
+﻿@model ASP.NET_Core_MVC_Piacom.Models.ViewModels.EditRoleViewModel
+
+<h2 class="text-center my-4">Edit Role</h2>
+
+<div class="container">
+    <form asp-action="EditRole" method="post">
+        <input type="hidden" asp-for="RoleId" />
+
+        <div class="form-group">
+            <label asp-for="RoleName" class="control-label font-weight-bold"></label>
+            <input asp-for="RoleName" class="form-control" placeholder="Enter role name" />
+            <span asp-validation-for="RoleName" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            @for (int i = 0; i < Model.AvailablePermissions.Count; i++)
+            {
+                var sanitizedPermission = Model.AvailablePermissions[i].Replace(" ", "");
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="SelectedPermissions" value="@sanitizedPermission"
+                        @(Model.SelectedPermissions.Contains(sanitizedPermission) ? "checked" : "") />
+                        <label class="form-check-label" for="@Model.AvailablePermissions[i]">@Model.AvailablePermissions[i]</label>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block mt-3">Update Role</button>
+    </form>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success mt-3" role="alert">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger mt-3" role="alert">@TempData["ErrorMessage"]</div>
+    }
+</div>
+
+<style>
+    h2 {
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-check {
+        padding: 0.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .form-check:hover {
+        background-color: #f8f9fa;
+    }
+
+    .alert {
+        border-radius: 5px;
+    }
+</style>
