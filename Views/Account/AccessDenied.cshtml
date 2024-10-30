@@ -1,6 +1,80 @@
 ﻿@{
     ViewData["Title"] = "Access Denied";
 }
-<div>
-    <h2> You are not allowed to access this page!</h2>
+
+<style>
+    .access-denied-container {
+        text-align: center;
+        padding: 50px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        border-radius: 10px;
+        max-width: 600px;
+        margin: 100px auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        font-family: Arial, sans-serif;
+    }
+
+        .access-denied-container h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .access-denied-container p {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .access-denied-container ul {
+            list-style-type: none;
+            padding: 0;
+            font-size: 1.1em;
+        }
+
+            .access-denied-container ul li {
+                margin: 10px 0;
+            }
+
+    .btn-home {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1.2em;
+        transition: background-color 0.3s;
+    }
+
+        .btn-home:hover {
+            background-color: #0056b3;
+        }
+
+    .icon {
+        font-size: 3em;
+        color: #721c24;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="access-denied-container">
+    <div class="icon">
+        <i class="fas fa-exclamation-triangle"></i> <!-- Use Font Awesome for icons -->
+    </div>
+    <h2>Access Denied</h2>
+    <p>We're sorry, but you do not have permission to access this page.</p>
+
+    <p><strong>Possible reasons for this include:</strong></p>
+    <ul>
+        <li>Your user account does not have the necessary permissions.</li>
+        <li>The page may require specific user roles or authentication.</li>
+    </ul>
+
+    <p>If you believe this is an error, please contact your system administrator for assistance.</p>
+
+    <p>Meanwhile, you can return to the <a href="@Url.Action("Index", "Home")" class="btn-home">homepage</a>.</p>
 </div>
+
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha384-DyZvtJIs5dE/NPd8K7x+zU3rLqlpU0bOkWbR4ZDe7SQGEF+o+Y6cCD0VnTtMi3s8" crossorigin="anonymous">

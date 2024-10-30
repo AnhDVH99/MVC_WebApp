@@ -63,7 +63,6 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "EditEmployee")]
         public async Task<IActionResult> Edit(Guid id)
         {
 
@@ -85,6 +84,8 @@ namespace ASP.NET_Core_MVC_Piacom.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "EditEmployee")]
+
         public async Task<IActionResult> Edit(EditEmployeeRequest editEmployeeRequest)
         {
             var employee = new Employee
